@@ -1,4 +1,4 @@
-""" urls for the substances app """
+""" urls for the contexts app """
 from django.urls import path
 from contexts import views
 

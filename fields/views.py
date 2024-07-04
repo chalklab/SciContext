@@ -6,7 +6,7 @@ from config.functions import *
 def index(request, fldid=''):
     """view to generate list of namespaces"""
     fields = getflds(fldid)
-    return render(request, "fields/list.html", {'fields': fields})
+    return render(request, "fields/index.html", {'fields': fields})
 
 
 def view(request, fldid):
