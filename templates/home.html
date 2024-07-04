@@ -1,17 +1,14 @@
-{% load socialaccount %}
-<html>
-  <head>
-    <title>Google Registration</title>
-  </head>
-  <body>
-  <h1>My Google Login Project</h1>
-  {% if user.is_authenticated %}
-  <p>Welcome, {{ user.username }} !</p>
-
-  {% else %}
-  <h1>My Google Login Project</h1>
-  <a href="{% provider_login_url 'google' %}">Login with Google</a>
-  {% endif %}
-
-  </body>
-</html>
+{% extends 'base.html' %}
+{% block title %} SciContext Home {% endblock %}
+{% block content %}
+    <h2>SciContext: JSON-LD context file creation for all</h2>
+    <div class="card bg-light p-3 mb-2">
+        <p class="mb-0 justify-content">Semantic data is becoming an important part of the data publising landscape. Any
+        encoding of RDF (Resource Description Framework) requires that you annotate your data, so it can be converted
+        into RDF triples - subject, predicate, object statements of knowledge.  For the JSON for linked data encoding
+        (JSON-LD) of RDF, semantic annotation of data is provided through the inclusion of context files.  If you are 
+            developing JSON-LD files this can be an issue as not only do you need to create them, you need to make
+        them available online so the conversion to RDF can be done.  This Django project can help you create, manage, 
+            and deploy any/all context files you need for your application(s).</p>
+    </div>
+{% endblock %}
