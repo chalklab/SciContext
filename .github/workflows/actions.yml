@@ -1,0 +1,48 @@
+name: GitHub Actions
+
+env:
+  PYTHON_MAIN_VERSION: 3.10
+  POETRY_VERSION: 1.2.2
+
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ["3.7", "3.8", "3.9", "3.10"]
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+            python -m pip install poetry==${{ env.POETRY_VERSION }}
+            poetry install
+
+      - name: Lint
+        if: ${{ matrix.python-version == env.PYTHON_MAIN_VERSION }}
+        run: |
+            poetry run flake8 --count
+
+      - name: Build Python package and Upload to PyPi
+        shell: bash -l {0}
+        if: startsWith( github.ref, 'refs/tags/v') && matrix.python-version == env.PYTHON_MAIN_VERSION
+        env:
+          PYPI_TOKEN_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: |
+          pip install wheel twine
+          python setup.py sdist bdist_wheel
+          twine upload --username "__token__" --password $PYPI_TOKEN_PASSWORD dist/*

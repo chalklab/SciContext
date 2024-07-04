@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+{% block title %} Context View {% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-12 col-md-10 offset-md-1 mt-2">
+            <button id="createctx" dbid="{{ context.id }}" type="button" class="btn btn-info float-right">Create Context</button>
+            <h3>{{ context.name }}</h3>
+            <ul>
+                <li>Dataset: {{ dataset.name }}</li>
+                <li>Description: {{ context.description }} </li>
+                <li>URL:
+                    {% with url="https://stuchalk.github.io/scidata/contexts/"|add:context.filename|add:".jsonld" %}
+                    <a href="{{ url }}" target="_blank">{{ url }}</a>
+                    {% endwith %}
+                </li>
+                <li>Sub-Contexts:
+                    {% for id, name in ctxs %}
+                        <a href="/contexts/view/{{ subid }}" target="_blank">{{ name }}</a>
+                    {%  endfor %}
+                </li>
+            </ul>
+         </div>
+        <div class="col-12 col-md-10 offset-md-1 mt-2">
+            <div class="card">
+                <div class="card-header pt-1 pb-1">
+                    <div class="row">
+                        <div class="col-6">
+                            <h4 class="float-left mr-1" style="margin: 3px 0;">Defined Fields</h4>
+                            <button id="addcwk" cxtid="{{ context.id }}" type="button" data-toggle="modal" data-target="#cwkmodal" class="btn btn-sm btn-success float-left">Add</button>
+                        </div>
+                        <div class="col-6">
+                            <input id="listsrc" placeholder="Search fields (or scroll)" class="form-control form-control-sm float-right" data-search-override="true" type="text"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body list-group list-group-flush panel-responsive-320 py-0 pr-0">
+                    <div id="cwks" class="row">
+                    {% for fld in fields %}
+                        <div class="col-11 pr-0">
+                        <a id="cwk{{ fld.id }}" class="editcwk list-group-item items py-1" fldid="{{ fld.id }}" data-toggle="modal" data-target="#cwkmodal" style="cursor: pointer;">
+                            <b>{{ cw.table }}:{{ cw.field }} -></b> {% if cw.newname %}
+                            {{ fld.newname }} {% else %} {{ fld.field }} {% endif %} ({{ fld.datatype }})
+                            means <em>{{ fld.term.title }}</em> [{{ fld.term.url }}]
+                        </a>
+                        </div>
+                        <div class="col-1 pl-0">
+                            <button class="btn btn-sm btn-danger delcwk col-12" fldid="{{ fld.id }}" title="Delete">X</button>
+                        </div>
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="cwkmodal" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add/Edit Field</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="modalform" fldid="" cxtid="">
+                        <div class="form-group row">
+                            <label for="table" class="col-form-label col-md-3" title="From database (optional)">Table:</label>
+                            <input type="text" old="" class="form-control col-md-8 updcwk" id="table"/>
+                        </div>
+                        <div class="form-group row">
+                            <label for="field" class="col-form-label col-md-3" title="Field name in source (required)">Field:</label>
+                            <input type="text" old="" class="form-control col-md-8 updcwk" id="field"/>
+                        </div>
+                        <div class="form-group row">
+                            <label for="term_id" class="col-form-label col-md-3">Term:</label>
+                            <select class="form-control col-md-8 updcwk" id="term_id">
+                                <option value="">Choose Ontology Term</option>
+                                {% for ont in onts %}
+                                <option value="{{ ont.id }}">{{ ont.title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group row">
+                            <label for="sdsection" class="col-form-label col-md-3">Section:</label>
+                            <select class="form-control col-md-8 updcwk" id="sdsection">
+                                <option value="">Choose SciData Section</option>
+                                <option value="methodology">Methodology</option>
+                                <option value="system">System</option>
+                                <option value="dataset">Dataset</option>
+                                <option value="metadata">Metadata (unusual)</option>
+                            </select>
+                        </div>
+                        <div class="form-group row">
+                            <label for="sdsubsection" class="col-form-label col-md-3" title="Aspect/Facet Type">Type:</label>
+                            <input type="text" old="" class="form-control col-md-8 updcwk" id="sdsubsection"/>
+                        </div>
+                        <div class="form-group row">
+                            <label for="newname" class="col-form-label col-md-3" title="New field name (optional)">Name:</label>
+                            <input type="text" old="" class="form-control col-md-8 updcwk" id="newname"/>
+                        </div>
+                        <div class="form-group row">
+                            <label for="category" class="col-form-label col-md-3" title="Class of metadata (optional)">Category:</label>
+                            <input type="text" old="" class="form-control col-md-8 updcwk" id="category"/>
+                        </div>
+                        <div class="form-group row">
+                            <label for="datatype" class="col-form-label col-md-3">Datatype:</label>
+                            <select class="form-control col-md-8 updcwk" id="datatype">
+                                <option value="">XSD Datatype</option>
+                                <option value="string">String (most common)</option>
+                                <option value="dateTime">Date/Time</option>
+                                <option value="decimal">Decimal</option>
+                                <option value="float">Float (32 bit)</option>
+                                <option value="double">Float (64 bit)</option>
+                                <option value="integer">Integer</option>
+                                <option value="nonNegativeInteger">Non-Negative Integer</option>
+                                <option value="anyURI">URI</option>
+                                <option value="@id">@id</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <p class="small">Data is updated in the background as you change entries...</p>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

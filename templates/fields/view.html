@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %} Field View {% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-12">
+            <h3>{{ field.field }} ({{ field.table }})</h3>
+            <ul>
+                <li>Dataset: {{ field.dataset.name }}</li>
+                <li>Term: {{ field.term.title }} </li>
+                <li>Definition: {{ field.term.definition }} </li>
+                <li>Ontology: {{ field.term.nspace.name }} </li>
+            </ul>
+        </div>
+    </div>
+{% endblock %}

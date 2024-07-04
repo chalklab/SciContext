@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row mt-2">
+        <div class="col-xs-12 col-sm-12 col-md-5 offset-md-1">
+            <div class="card mt-2">
+                <div class="card-header pt-1 pb-1">
+                    <div class="row">
+                        <div class="col-12">
+                            <h4>Add Ontology Namespace</h4>
+                        </div>
+                    </div>
+                    <div id="aliases" class="invisible" hidden>:{{ aliases|join:":" }}:</div>
+                </div>
+                <div id="form" class="card-body panel-responsive-220">
+                    <form action="/nspaces/add/" method="post">
+                        {% csrf_token %}
+                        <div class="form-group row">
+                            <label for="name" class="col-form-label col-md-3" title="Identify the namespace">Name:</label>
+                            <input type="text" class="form-control col-md-8" name="name" id="name"/>
+                        </div>
+                        <div class="form-group row">
+                            <label for="alias" class="col-form-label col-md-3" title="Give a short (up to 4 char) alias">Alias:</label>
+                            <input type="text" class="form-control col-md-8" name="alias" id="alias"/>
+                        </div>
+                        <div class="form-group row">
+                            <label for="path" class="col-form-label col-md-3" title="Base URL of the ontology">Path:</label>
+                            <input type="text" class="form-control col-md-8" name="path" id="path"/>
+                        </div>
+                        <div class="form-group row">
+                            <label for="homepage" class="col-form-label col-md-3" title="Website URL for ontology">Homepage:</label>
+                            <input type="text" class="form-control col-md-8" name="homepage" id="homepage"/>
+                        </div>
+                        <div class="form-group">
+                            <div class="float-right">
+                                <input type="submit" value="Add"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-5">
+            <div class="card mt-2">
+                <div class="card-header pt-1 pb-1">
+                    <div class="row">
+                        <div class="col-10">
+                            <h4 class="mb-0">Ontologies from the EBI-OLS</h4>
+                            <small>Click to populate form (or scroll)</small>
+                        </div>
+                        <div class="col-2 px-0">
+                            <input id="listsrc" placeholder="Search..." class="form-control form-control-sm float-right" data-search-override="true" type="text"/>
+                        </div>
+                    </div>
+                    <div id="aliases" class="invisible" hidden>:{{ aliases|join:":" }}:</div>
+                </div>
+                <div id="ols" class="card-body list-group panel-responsive-220 py-0 pr-0">
+                    {% for alias, title, url, home in onts %}
+                        <a class="olsont list-group-item term items py-1" data-ont="{{ title }}*{{ alias }}*{{ url }}*{{ home }}">{{ title|lower }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

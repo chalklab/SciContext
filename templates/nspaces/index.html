@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %} Namepsace List {% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-10 offset-md-1">
+            <div class="card mt-2">
+                <div class="card-header pt-1 pb-1">
+                    <div class="row">
+                        <div class="col-5">
+                            <h4>Defined Namespaces</h4>
+                        </div>
+                        <div class="col-5 px-0">
+                            <label for="listsrc"></label>
+                            <input id="listsrc" placeholder="Search namespaces (or scroll)" class="form-control form-control-sm float-right" data-search-override="true" type="text"/>
+                        </div>
+                        <div class="col-2 px-0">
+                            <a href="/nspaces/add/" type="button" class="btn btn-sm btn-primary float-right">Add Namespace</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="spaces" class="card-body list-group list-group-flush panel-responsive-220 py-0 pr-0">
+                    {% for ns in spaces %}
+                        <a class="list-group-item items py-1" href="/nspaces/view/{{ ns.id }}">{{ ns.name}} ({{ns.ns}})</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

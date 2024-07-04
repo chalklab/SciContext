@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %} Term View {% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col col-10 mt-2">
+            <h3>{{ term.title }}</h3>
+            <ul>
+                <li>Definition: {{ term.definition }}</li>
+                <li>SciData Section: {{ term.sdsection }} </li>
+                <li>SciData Subsection: {{ term.sdsubsection }}</li>
+                <li>URI: <a href="{{ uri }}" target="_blank">{{ uri }}</a></li>
+            </ul>
+            <h4>Used in Contexts</h4>
+            <ul>
+                {% for fld in term.fields_set.all %}
+                    <li><a href="/contexts/view/{{ fld.context.id }}">{{ fld.context.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

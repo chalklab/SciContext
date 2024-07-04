@@ -1,0 +1,27 @@
+.panel-responsive-370 {
+    max-height: calc(100vh - 370px);
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+}
+
+.panel-responsive-320 {
+    max-height: calc(100vh - 320px);
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+}
+
+.panel-responsive-270 {
+    max-height: calc(100vh - 270px);
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+}
+
+.panel-responsive-220 {
+    max-height: calc(100vh - 220px);
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+}
+
+.olsont {
+    cursor: pointer;
+}

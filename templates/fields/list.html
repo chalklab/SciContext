@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %} Field List {% endblock %}
+{% block content %}
+    <h3>Current Fields</h3>
+    <ul>
+    {% for fld in fields %}
+        <li><a href="/fields/view/{{ fld.id }}">{{ fld.field }} ({{ fld.table }})</a></li>
+    {% endfor %}
+    </ul>
+{% endblock %}

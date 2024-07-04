@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row mt-2">
+        <div class="col col-12 col-md-4 offset-md-1">
+            <div class="card mt-2">
+                <div class="card-header pt-1 pb-1">
+                    <div class="row">
+                        <div class="col-12">
+                            <h4 class="mb-0">Add Ontology Term</h4>
+                        </div>
+                    </div>
+                </div>
+                <div id="form" class="card-body panel-responsive-220">
+                    <form id="addform" action="/terms/add/" method="post">
+                        {% csrf_token %}
+                        <div class="row ps-2 pe-2 mb-3">
+                            <input type="text" class="form-control" id="ns_title" name="title" placeholder="Title" value="" aria-label="Title" />
+                        </div>
+                        <div class="row ps-2 pe-2 mb-3">
+                            <input type="text" class="form-control" id="ns_defn" name="definition" placeholder="Definition" value="" aria-label="Definition"/>
+                        </div>
+                        <div class="row ps-2 pe-2 mb-3">
+                            <input type="text" class="form-control" id="ns_code" name="code" placeholder="Term Code" value="" aria-label="Term Code"/>
+                        </div>
+                        <div class="row ps-2 pe-2 mb-3">
+                            <select class="form-control" id="ns_id" name="nsid" aria-label="Choose Namespace">
+                                <option value="">Choose Namespace...</option>
+                                {% for id, name in nss %}
+                                    <option value="{{ id }}">{{ name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="float-end">
+                                <input type="submit" value="Add"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col col-12 col-sm-12 col-md-6">
+            <div class="card mt-2">
+                <div class="card-header pt-1 pb-1">
+                    <div class="row">
+                        <div class="col-4">
+                            <h4 class="mb-0">EBI-OLS Ontologies</h4>
+                        </div>
+                        <div class="col-4">
+                            <label for="listsrc"></label>
+                            <input id="listsrc" placeholder="Search terms (or scroll)" class="form-control form-control-sm float-right" data-search-override="true" type="text"/>
+                        </div>
+                        <div class="col-4">
+                            <label for="olsont"></label>
+                            <select id="olsont" class="form-control form-control-sm" name="nspace_id" aria-describedby="ns_spaces">
+                            <option value="">Show terms in ontology...</option>
+                            {% for  alias, title, url, home in onts %}
+                                <option value="{{ alias }}">{{ title }} ({{ alias }})</option>
+                            {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="terms" class="card-body panel-responsive-220">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
