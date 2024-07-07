@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %} Project View {% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col col-8 offset-1 mt-2">
+            <h3>{{ project.name }}</h3>
+            <ul>
+                <li>Description: {{ project.description }}</li>
+                <li>Prefix: {{ project.prefix }} </li>
+                <li>Project URL: {{ project.prjurl }}</li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-10 offset-1 mt-2">
+            <div class="card">
+                <div class="card-header">
+                    <div class="float-start">
+                        <h4>Context Files ({{ project.onts_set.all|length }})</h4>
+                    </div>
+                        <div class="float-end">
+                            <label for="listsrc"></label>
+                            <input id="listsrc" placeholder="Search..." class="form-control form-control-sm" data-search-override="true" type="text"/>
+                        </div>
+                </div>
+                <div class="list-group list-group-flush card-body p-0 panel-responsive-370">
+                    {% for ont in server.onts_set.all %}
+                        {% if ont.name %}
+                        <a class="list-group-item item" data-content="{{ ont.name|lower }}" href="/onts/view/{{ ont.id }}">{{ ont.name }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

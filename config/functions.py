@@ -3,6 +3,18 @@ from config.svr_functions import *
 import datetime
 
 
+def getprjs():
+    """get a list of projects"""
+    prjs = Projects.objects.all()
+    return prjs
+
+
+def getprj(prjid):
+    """get a project"""
+    prj = Projects.objects.get(id=prjid)
+    return prj
+
+
 def getctxs():
     """get a list of contexts"""
     ctxs = Contexts.objects.all()

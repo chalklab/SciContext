@@ -10,8 +10,22 @@
 from django.db import models
 
 
+class Projects(models.Model):
+    name = models.CharField(max_length=64)
+    description = models.CharField(max_length=128)
+    prefix = models.CharField(max_length=64, blank=True, null=True)
+    prjurl = models.CharField(max_length=256, blank=True, null=True)
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = True
+        db_table = 'projects'
+        app_label = 'projects'
+
+
 class Contexts(models.Model):
     name = models.CharField(max_length=64)
+    project = models.ForeignKey(Projects, on_delete=models.DO_NOTHING, db_column='project_id', blank=True, null=True)
     description = models.CharField(max_length=128)
     version = models.CharField(max_length=8)
     vocab = models.CharField(max_length=64)
@@ -24,6 +38,17 @@ class Contexts(models.Model):
         managed = True
         db_table = 'contexts'
         app_label = 'contexts'
+
+
+class ContextJoins(models.Model):
+    parent = models.ForeignKey(Contexts, on_delete=models.DO_NOTHING, db_column='parent_id', blank=True, null=True)
+    child = models.ForeignKey(Contexts, on_delete=models.DO_NOTHING, db_column='child_id', blank=True, null=True)
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = True
+        db_table = 'contextjoins'
+        app_label = 'contextjoins'
 
 
 class Servers(models.Model):
@@ -76,17 +101,6 @@ class Terms(models.Model):
         app_label = 'terms'
 
 
-class ContextsFields(models.Model):
-    context = models.ForeignKey(Contexts, on_delete=models.DO_NOTHING, db_column='context_id')
-    term = models.ForeignKey(Terms, on_delete=models.DO_NOTHING, db_column='term_id')
-    updated = models.DateTimeField()
-
-    class Meta:
-        managed = True
-        db_table = 'contexts_fields'
-        app_label = 'contexts_fields'
-
-
 class Fields(models.Model):
     name = models.CharField(max_length=256)
     term = models.ForeignKey(Terms, on_delete=models.DO_NOTHING, db_column='term_id')
@@ -102,3 +116,14 @@ class Fields(models.Model):
         managed = True
         db_table = 'fields'
         app_label = 'fields'
+
+
+class ContextsFields(models.Model):
+    context = models.ForeignKey(Contexts, on_delete=models.DO_NOTHING, db_column='context_id', blank=True, null=True)
+    field = models.ForeignKey(Fields, on_delete=models.DO_NOTHING, db_column='field_id', blank=True, null=True)
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = True
+        db_table = 'contexts_fields'
+        app_label = 'contexts_fields'

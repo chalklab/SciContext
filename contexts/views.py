@@ -25,8 +25,9 @@ def view(request, ctxid):
     else:
         subids = None
         ctxs = None
-    cws = ctx.contextsfields_set.all().order_by('table', 'field')
+    cws = ctx.contextsfields_set.all().order_by('context', 'field')
     onts = gettrms()
+
     return render(request, "contexts/view.html",
                   {'context': ctx, 'fields': cws, 'onts': onts, 'ctxs': ctxs, 'subids': subids})
 
@@ -37,18 +38,23 @@ def add(request):
         # save new namespace
         data = request.POST
         ctx = Contexts()
-        ctx.dataset_id = data['dataset_id']
         ctx.name = data['name']
         ctx.description = data['description']
         ctx.filename = data['filename']
+        if data['prjid']:
+            ctx.project_id = data['prjid']
+        else:
+            ctx.project_id = None
         temp = list(request.POST.getlist('subctxs'))
         ctx.subcontexts = ','.join(temp)  # bizarre syntax, but it works!
+        ctx.updated = datetime.now()
         ctx.save()
-        # save field entries that have not been saved
+        # TODO: save field entries that have not been saved?
         return redirect('/contexts/view/' + str(ctx.id))
 
-    ctxs = lstctxs(None)
-    return render(request, "contexts/add.html", {'ctxs': ctxs})
+    ctxs = getctxs()
+    prjs = getprjs()
+    return render(request, "contexts/add.html", {'ctxs': ctxs, 'prjs': prjs})
 
 
 # ajax functions (wrappers)
@@ -56,7 +62,7 @@ def add(request):
 
 @csrf_exempt
 def terms(request, ontid):
-    termz = olsont(ontid)
+    termz = getont(ontid)
     return JsonResponse({"terms": termz}, status=200)
 
 

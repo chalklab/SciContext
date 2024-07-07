@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'terms',
     'contexts_fields',
     'servers',
+    'projects',
 ]
 
 MIDDLEWARE = [

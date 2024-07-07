@@ -10,41 +10,41 @@
                         </div>
                     </div>
                 </div>
-                <div id="form" class="card-body panel-responsive-220">
+                <div id="form" class="card-body ps-4 pe-4">
                     <form id="addform" action="/contexts/add/" method="post">
                         {% csrf_token %}
                         <div class="form-group row">
-                            <label for="ctx_dsid" class="col-form-label col-3 col-md-3" title="Choose a dataset">Dataset:</label>
-                            <select class="form-control col-8 col-md-8" name="dataset_id" id="dataset_id" aria-describedby="ctx_dsid">
+                            <label id="ctx_prjid" for="prjid" class="col-form-label" title="Choose a project">Project (optional):</label>
+                            <select class="form-control" name="prjid" id="prjid" aria-describedby="prjid" {% if not prjs %}disabled{% endif %}>
                                 <option value="">Choose...</option>
-                                {% for id, name in sets %}
-                                    <option value="{{ id }}">{{ name }}</option>
+                                {% for prj in prjs %}
+                                    <option value="{{ prj.id }}">{{ prj.name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div class="form-group row">
-                            <label id="ctx_name" for="definition" class="col-form-label col-3 col-md-3" title="Add a name">Name:</label>
-                            <input type="text" class="form-control col-8 col-md-8" name="name" id="name" value="" aria-describedby="ctx_name"/>
+                            <label id="ctx_name" for="name" class="col-form-label" title="Add a name">Name:</label>
+                            <input type="text" class="form-control" name="name" id="name" value="" aria-describedby="ctx_name"/>
                         </div>
                         <div class="form-group row">
-                            <label id="ctx_desc" for="definition" class="col-form-label col-3 col-md-3" title="Add a description">Description:</label>
-                            <input type="text" class="form-control col-8 col-md-8" name="description" id="description" value="" aria-describedby="ctx_desc"/>
+                            <label id="ctx_desc" for="description" class="col-form-label" title="Add a description">Description:</label>
+                            <input type="text" class="form-control" name="description" id="description" value="" aria-describedby="ctx_desc"/>
                         </div>
                         <div class="form-group row">
-                            <label for="ctx_filename" class="col-form-label col-3 col-md-3" title="What url location?">Filename (no extension):</label>
-                            <input type="text" class="form-control col-8 col-md-8" name="filename" id="filename" value="" aria-describedby="ctx_filename"/>
+                            <label id="ctx_fname" for="filename" class="col-form-label col-4" title="What the filename?">Filename (no extension):</label>
+                            <input type="text" class="form-control" name="filename" id="filename" value="" aria-describedby="filename"/>
                         </div>
                         <div class="form-group row">
-                            <label for="ctx_subctxs" class="col-form-label col-3 col-md-3" title="Contexts to be referenced in the context file">Sub-Contexts:</label>
-                            <select multiple size="10" class="form-control col-8 col-md-8" name="subctxs" id="subctxs" aria-describedby="ctx_subctxs">
-                                <option value="">Choose...</option>
+                            <label id="ctx_subctxs" for="subctxs" class="col-form-label" title="Contexts to be referenced in the context file">Sub-Contexts:</label>
+                            <select multiple size="{% if ctxs %}5{% else %}1{% endif %}" class="form-control" name="subctxs" id="subctxs" aria-describedby="subctxs" {% if not ctxs %}disabled{% endif %}>
+                                <option value="">{% if ctxs %}Choose...{% else %}Disabled (no contexts){% endif %}</option>
                                 {% for id, name in ctxs %}
                                     <option value="{{ id }}">{{ name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="form-group">
-                            <div class="float-right">
+                        <div class="form-group mt-2">
+                            <div class="float-end">
                                 <input type="submit" value="Add"/>
                             </div>
                         </div>

@@ -1,54 +1,62 @@
 {% extends 'base.html' %}
 {% block title %} Context View {% endblock %}
 {% block content %}
-    <div class="row">
-        <div class="col-12 col-md-10 offset-md-1 mt-2">
-            <button id="createctx" dbid="{{ context.id }}" type="button" class="btn btn-info float-right">Create Context</button>
-            <h3>{{ context.name }}</h3>
+    <div class="row pb-2">
+        <div class="col-8 offset-1">
+            <h3>Context: {{ context.name }}</h3>
             <ul>
-                <li>Dataset: {{ dataset.name }}</li>
+                <li>Project: {{ context.project.name }}</li>
                 <li>Description: {{ context.description }} </li>
                 <li>URL:
                     {% with url="https://stuchalk.github.io/scidata/contexts/"|add:context.filename|add:".jsonld" %}
-                    <a href="{{ url }}" target="_blank">{{ url }}</a>
+                        <a href="{{ url }}" target="_blank">{{ url }}</a>
                     {% endwith %}
                 </li>
-                <li>Sub-Contexts:
-                    {% for id, name in ctxs %}
-                        <a href="/contexts/view/{{ subid }}" target="_blank">{{ name }}</a>
-                    {%  endfor %}
-                </li>
+                {% if ctxs %}
+                    <li>Sub-Contexts:
+                        {% for ctx in ctxs %}
+                            <a href="/contexts/view/{{ ctx.id }}" target="_blank">{{ ctx.name }}</a>
+                        {% endfor %}
+                    </li>
+                {% endif %}
             </ul>
-         </div>
-        <div class="col-12 col-md-10 offset-md-1 mt-2">
-            <div class="card">
+        </div>
+        <div class="col-2">
+            <button id="createctx" type="button" class="btn btn-info float-right">Create Context</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-10 offset-1">
+            <div class="card mt-2">
                 <div class="card-header pt-1 pb-1">
                     <div class="row">
-                        <div class="col-6">
-                            <h4 class="float-left mr-1" style="margin: 3px 0;">Defined Fields</h4>
-                            <button id="addcwk" cxtid="{{ context.id }}" type="button" data-toggle="modal" data-target="#cwkmodal" class="btn btn-sm btn-success float-left">Add</button>
+                        <div class="col-5">
+                            <h4>Defined Fields</h4>
                         </div>
-                        <div class="col-6">
-                            <input id="listsrc" placeholder="Search fields (or scroll)" class="form-control form-control-sm float-right" data-search-override="true" type="text"/>
+                        <div class="col-5 px-0">
+                            <input id="listsrc" placeholder="Search fields (or scroll)" class="form-control form-control-sm float-right" data-search-override="true" type="text" aria-label="Search fields (or scroll)"/>
+                        </div>
+                        <div class="col-2 px-0">
+                            <a id="addfld" data-ctxid="{{ context.id }}" type="button" data-toggle="modal" data-target="#cwkmodal" class="btn btn-sm btn-success float-end">Add</a>
                         </div>
                     </div>
                 </div>
                 <div class="card-body list-group list-group-flush panel-responsive-320 py-0 pr-0">
-                    <div id="cwks" class="row">
+                <div id="cwks" class="row">
                     {% for fld in fields %}
                         <div class="col-11 pr-0">
-                        <a id="cwk{{ fld.id }}" class="editcwk list-group-item items py-1" fldid="{{ fld.id }}" data-toggle="modal" data-target="#cwkmodal" style="cursor: pointer;">
-                            <b>{{ cw.table }}:{{ cw.field }} -></b> {% if cw.newname %}
-                            {{ fld.newname }} {% else %} {{ fld.field }} {% endif %} ({{ fld.datatype }})
-                            means <em>{{ fld.term.title }}</em> [{{ fld.term.url }}]
-                        </a>
+                            <a id="cwk{{ fld.id }}" class="editcwk list-group-item items py-1" data-fldid="{{ fld.id }}" data-toggle="modal" data-target="#cwkmodal" style="cursor: pointer;">
+                                <b>{{ cw.table }}:{{ cw.field }} -></b> {% if cw.newname %}
+                                {{ fld.newname }} {% else %} {{ fld.field }} {% endif %} ({{ fld.datatype }})
+                                means <em>{{ fld.term.title }}</em> [{{ fld.term.url }}]
+                            </a>
                         </div>
                         <div class="col-1 pl-0">
-                            <button class="btn btn-sm btn-danger delcwk col-12" fldid="{{ fld.id }}" title="Delete">X</button>
+                            <button class="btn btn-sm btn-danger delcwk col-12" data-fldid="{{ fld.id }}" title="Delete">X</button>
                         </div>
                     {% endfor %}
-                    </div>
                 </div>
+            </div>
             </div>
         </div>
     </div>
@@ -62,21 +70,21 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="modalform" fldid="" cxtid="">
+                    <form id="modalform" data-fldid="" data-cxtid="">
                         <div class="form-group row">
                             <label for="table" class="col-form-label col-md-3" title="From database (optional)">Table:</label>
-                            <input type="text" old="" class="form-control col-md-8 updcwk" id="table"/>
+                            <input type="text" data-old="" class="form-control col-md-8 updcwk" id="table"/>
                         </div>
                         <div class="form-group row">
                             <label for="field" class="col-form-label col-md-3" title="Field name in source (required)">Field:</label>
-                            <input type="text" old="" class="form-control col-md-8 updcwk" id="field"/>
+                            <input type="text" data-old="" class="form-control col-md-8 updfld" id="field"/>
                         </div>
                         <div class="form-group row">
                             <label for="term_id" class="col-form-label col-md-3">Term:</label>
-                            <select class="form-control col-md-8 updcwk" id="term_id">
+                            <select class="form-control col-md-8 updtrm" id="term_id">
                                 <option value="">Choose Ontology Term</option>
                                 {% for ont in onts %}
-                                <option value="{{ ont.id }}">{{ ont.title }}</option>
+                                    <option value="{{ ont.id }}">{{ ont.title }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -92,15 +100,15 @@
                         </div>
                         <div class="form-group row">
                             <label for="sdsubsection" class="col-form-label col-md-3" title="Aspect/Facet Type">Type:</label>
-                            <input type="text" old="" class="form-control col-md-8 updcwk" id="sdsubsection"/>
+                            <input type="text" data-old="" class="form-control col-md-8 updcwk" id="sdsubsection"/>
                         </div>
                         <div class="form-group row">
                             <label for="newname" class="col-form-label col-md-3" title="New field name (optional)">Name:</label>
-                            <input type="text" old="" class="form-control col-md-8 updcwk" id="newname"/>
+                            <input type="text" data-old="" class="form-control col-md-8 updcwk" id="newname"/>
                         </div>
                         <div class="form-group row">
                             <label for="category" class="col-form-label col-md-3" title="Class of metadata (optional)">Category:</label>
-                            <input type="text" old="" class="form-control col-md-8 updcwk" id="category"/>
+                            <input type="text" data-old="" class="form-control col-md-8 updcwk" id="category"/>
                         </div>
                         <div class="form-group row">
                             <label for="datatype" class="col-form-label col-md-3">Datatype:</label>

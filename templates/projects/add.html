@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row mt-2">
+        <div class="col col-12 col-md-8 offset-md-2">
+            <div class="card mt-2">
+                <div class="card-header pt-1 pb-1">
+                    <div class="row">
+                        <div class="col-12">
+                            <h4 class="mb-0">Add Project</h4>
+                        </div>
+                    </div>
+                </div>
+                <div id="form" class="card-body">
+                    <form id="addform" action="/projects/add/" method="post">
+                        {% csrf_token %}
+                        <div class="row ps-2 pe-2 mb-3">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="" aria-label="Name" />
+                        </div>
+                        <div class="row ps-2 pe-2 mb-3">
+                            <input type="text" class="form-control" id="desc" name="desc" placeholder="Description" value="" aria-label="Description"/>
+                        </div>
+                        <div class="row ps-2 pe-2 mb-3">
+                            <input type="text" class="form-control" id="prefix" name="apikey" placeholder="Prefix (for names of context files)" value="" aria-label="Prefix (for names of context files)"/>
+                        </div>
+                        <div class="row ps-2 pe-2 mb-3">
+                            <input type="text" class="form-control" id="prjurl" name="prjurl" placeholder="Project URL" value="" aria-label="Project URL" />
+                        </div>
+                        <div class="form-group mt-2">
+                            <div class="float-end">
+                                <input type="submit" value="Add"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

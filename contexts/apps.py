@@ -3,5 +3,5 @@ from django.apps import AppConfig
 
 
 class ContextsConfig(AppConfig):
-    """ contexts database configuration """
+    """ contexts table configuration """
     name = 'contexts'

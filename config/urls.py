@@ -9,7 +9,7 @@ urlpatterns = [
     path('contexts/', include('contexts.urls')),
     path('fields/', include('fields.urls')),
     path('onts/', include('onts.urls')),
-    path('terms/', include('terms.urls')),
+    path('projects/', include('projects.urls')),
     path('servers/', include('servers.urls')),
-
+    path('terms/', include('terms.urls')),
 ]
