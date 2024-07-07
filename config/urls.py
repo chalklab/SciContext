@@ -8,6 +8,8 @@ urlpatterns = [
     path('', views.home, name='SciContext homepage'),
     path('contexts/', include('contexts.urls')),
     path('fields/', include('fields.urls')),
-    path('nspaces/', include('nspaces.urls')),
+    path('onts/', include('onts.urls')),
     path('terms/', include('terms.urls')),
- ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    path('servers/', include('servers.urls')),
+
+]

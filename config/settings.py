@@ -45,9 +45,10 @@ INSTALLED_APPS = [
     'crispy_forms',
     'contexts',
     'fields',
-    'nspaces',
+    'onts',
     'terms',
     'contexts_fields',
+    'servers',
 ]
 
 MIDDLEWARE = [
@@ -116,45 +117,20 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
+STATIC_URL = 'static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 
 # Crispy settings
-
-CRISPY_TEMPLATE_PACK = "bootstrap4"
-
-
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
-    }
-}
-
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend'
+    'django.contrib.auth.backends.ModelBackend'
 )
-
-authorized_users = [
-    'cweb1182@gmail.com',
-    'jaredracicot@gmail.com',
-    'stuartjchalk@gmail.com',
-    'n01448636@gmail.com',
-    'markaidestine@gmail.com',
-    'abdurazikd1@gmail.com'
-]
 
 # Debug toolbar settings
 

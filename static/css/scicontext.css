@@ -10,6 +10,12 @@
     overflow-y: auto;
 }
 
+.panel-responsive-300 {
+    max-height: calc(100vh - 300px);
+    -webkit-overflow-scrolling: touch;
+    overflow-y: auto;
+}
+
 .panel-responsive-270 {
     max-height: calc(100vh - 270px);
     -webkit-overflow-scrolling: touch;
@@ -24,4 +30,8 @@
 
 .olsont {
     cursor: pointer;
+}
+
+.item:hover {
+    color: blue;
 }

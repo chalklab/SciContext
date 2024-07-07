@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %} Server View {% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col col-8 offset-1 mt-2">
+            <h3>{{ server.name }}</h3>
+            <ul>
+                <li>Description: {{ server.description }}</li>
+                <li>Abbreviation: {{ server.abbrev }} </li>
+                {% if server.homepage %}
+                    <li>Homepage: <a href="{{ server.homepage }}" target="_blank">{{ server.homepage }}</a>
+                {% endif %}
+                {% if server.apiurl %}
+                    <li>API URL: <a href="{{ server.apiurl }}" target="_blank">{{ server.apiurl }}</a></li>
+                {% endif %}
+                {% if server.headers %}
+                    <li>API Headers (JSON): {{ server.headers }}</li>
+                {% endif %}
+                <li>Type: {{ server.type }}</li>
+            </ul>
+        </div>
+        <div class="col col2">
+            <button id="loadonts" data-dbid="{{ server.id }}" type="button" class="btn btn-info float-right">Update Ontologies</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col col-10 offset-1 mt-2">
+            <div class="card">
+                <div class="card-header">
+                    <div class="float-start">
+                        <h4>Available Ontologies ({{ server.onts_set.all|length }})</h4>
+                    </div>
+                        <div class="float-end">
+                            <label for="listsrc"></label>
+                            <input id="listsrc" placeholder="Search..." class="form-control form-control-sm" data-search-override="true" type="text"/>
+                        </div>
+                </div>
+                <div class="list-group list-group-flush card-body p-0 panel-responsive-370">
+                    {% for ont in server.onts_set.all %}
+                        {% if ont.name %}
+                        <a class="list-group-item item" data-content="{{ ont.name|lower }}" href="/onts/view/{{ ont.id }}">{{ ont.name }}</a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

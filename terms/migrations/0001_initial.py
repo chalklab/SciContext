@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('nspaces', '0001_initial'),
+        ('onts', '0001_initial'),
     ]
 
     operations = [
@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('notes', models.CharField(blank=True, max_length=64, null=True)),
                 ('visible', models.CharField(blank=True, max_length=8, null=True)),
                 ('updated', models.DateTimeField()),
-                ('nspace', models.ForeignKey(db_column='nspace_id', on_delete=django.db.models.deletion.DO_NOTHING, to='nspaces.nspaces')),
+                ('nspace', models.ForeignKey(db_column='nspace_id', on_delete=django.db.models.deletion.DO_NOTHING, to='onts.onts')),
             ],
             options={
                 'db_table': 'terms',

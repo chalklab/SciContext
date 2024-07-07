@@ -23,9 +23,9 @@
                             <input type="text" class="form-control" id="ns_code" name="code" placeholder="Term Code" value="" aria-label="Term Code"/>
                         </div>
                         <div class="row ps-2 pe-2 mb-3">
-                            <select class="form-control" id="ns_id" name="nsid" aria-label="Choose Namespace">
-                                <option value="">Choose Namespace...</option>
-                                {% for id, name in nss %}
+                            <select class="form-control" id="ontid" name="ontid" aria-label="Choose Ontology">
+                                <option value="">Choose Ontology...</option>
+                                {% for id, name in onts %}
                                     <option value="{{ id }}">{{ name }}</option>
                                 {% endfor %}
                             </select>

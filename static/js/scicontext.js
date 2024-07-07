@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $('#alias').on('blur', function() {
-        // for form in template nspaces/add.html
+        // for form in template onts/add.html
         let input = $('#alias');
         let nss = $('#aliases').html();
         let ns = input.val();
@@ -12,7 +12,7 @@ $(document).ready(function() {
     });
 
     $('.olsont').on('click', function() {
-        // for ols ont list in template nspaces/add.html
+        // for ols ont list in template onts/add.html
         let ont = $(this);
         let meta = ont.attr('data-ont').split("*");
         let nss = $('#aliases').html();
@@ -81,7 +81,7 @@ $(document).ready(function() {
         clone.removeClass('collapse');
         clone.find("#index" + nnum).text(nnum); // table field
         clone.find("#tbl0").attr('id','tbl' + nnum); // table field
-        clone.find("#fld0").attr('id','fld' + nnum); // field field
+        clone.find("#fld0").attr('id','fld' + nnum); // 'field' field
         clone.find("#trm0").attr('id','trm' + nnum); // ont term field
         clone.find("#sec0").attr('id','sec' + nnum); // section field
         clone.find("#typ0").attr('id','typ' + nnum); // aspect/facet type field
@@ -106,27 +106,27 @@ $(document).ready(function() {
             context: document.body,
             url: url,
             data: {cwkid: fldid, cxtid: cxtid, field: field, value: value },
-            success: function (data) {
+            success: function (resp) {
                 // note term title and url put in temp field (title|url)
-                let html = '<b>' + data.table + ':' + data.field + ' -> </b>';
-                if(data.newname) {
-                    html += ' ' + data.newname;
+                let html = '<b>' + resp.table + ':' + resp.field + ' -> </b>';
+                if(resp.newname) {
+                    html += ' ' + resp.newname;
                 } else {
-                    html += ' ' + data.field;
+                    html += ' ' + resp.field;
                 }
-                html += ' (' + data.datatype + ')';
-                if(data.temp) {
-                    let temp = data.temp.split('|');
+                html += ' (' + resp.datatype + ')';
+                if(resp.temp) {
+                    let temp = resp.temp.split('|');
                     html += ' means <em>' + temp[0] + '</em> [' + temp[1] + ']';
                 }
                 if(!fldid) {
                     // set the field id if it was not set (new entry)
-                    $('#modalform').attr("fldid",data.id);
+                    $('#modalform').attr("fldid",resp.id);
                     // add the new entry to the page
                     let newitem = '<div class="col-11 pr-0">';
-                    newitem += '<a id="cwk' + data.id + '" class="editfld list-group-item items py-1" fldid="' + data.id + '" data-toggle="modal" data-target="#fldmodal" style="cursor: pointer;">' + html + '</a>';
+                    newitem += '<a id="cwk' + resp.id + '" class="editfld list-group-item items py-1" data-fldid="' + resp.id + '" data-toggle="modal" data-target="#fldmodal" style="cursor: pointer;">' + html + '</a>';
                     newitem += '</div><div class="col-1 pl-0">';
-                    newitem += '<button class="btn btn-sm btn-danger delcwk col-12" fldid="' + data.id + '" title="Delete">X</button>'
+                    newitem += '<button class="btn btn-sm btn-danger delcwk col-12" data-fldid="' + resp.id + '" title="Delete">X</button>'
                     newitem += '</div>';
                     $("#flds").append(newitem);
                 } else {
@@ -161,7 +161,7 @@ $(document).ready(function() {
     });
 
     // search and show/hide terms in card
-    $("#listsrc").on('keyup',function(){
+    $("#btnsrc").on('keyup',function(){
         let val=$(this).val().toLowerCase().trim();
         let items=$('.items');
         let terms=$('.terms');
@@ -178,6 +178,16 @@ $(document).ready(function() {
                 $(".delcwk[cwkid='" + item.attr('cwkid') + "']").hide();
             });
             nomatch.hide();
+        }
+    });
+
+    // search and show/hide terms in card
+    $("#listsrc").on('keyup',function(){
+        let val=$(this).val().toLowerCase().trim();
+        let items=$('.item');
+        items.show();
+        if(val!=='') {
+            items.not('[data-content*="' + val + '"]').hide();
         }
     });
 
@@ -205,15 +215,15 @@ $(document).ready(function() {
     $(".editfld").on('click', function () {
         let fld = $(this);
         let fldid = fld.attr('fldid');
-        $.get('/fields/read/' + fldid, function( data ) {
+        $.get('/fields/read/' + fldid, function( fdata ) {
             let form = $('#modalform');
             form.attr("fldid",fldid);
-            form.attr("cxtid",data.context);
-            $('#table').val(data.table).attr('old',data.table);
-            $('#field').val(data.field).attr('old',data.field);
-            $('#term_id').val(data.term);
-            $('#category').val(data.category).attr('old',data.category);
-            $('#datatype').val(data.datatype);
+            form.attr("cxtid",fdata.context);
+            $('#table').val(fdata.table).attr('old',fdata.table);
+            $('#field').val(fdata.field).attr('old',fdata.field);
+            $('#term_id').val(fdata.term);
+            $('#category').val(fdata.category).attr('old',fdata.category);
+            $('#datatype').val(fdata.datatype);
             return false;
         });
     });
@@ -221,6 +231,23 @@ $(document).ready(function() {
     // focus modal to first input field on open
     $('#cwkmodal').on('shown.bs.modal', function () {
         $('#table').trigger('focus')
+    });
+
+    // load ontologies from an ontology server
+    $('#loadonts').on('click', function () {
+        let svrid = $(this).attr('data-dbid');
+        $.get('/servers/ontupd/' + svrid, function( sdata ) {
+            $('#debug').val(sdata);
+        });
+    });
+
+    // load ontologies from an ontology server
+    $('#loadtrms').on('click', function () {
+        let svrid = $(this).attr('data-svrid');
+        let ontid = $(this).attr('data-ontid');
+        $.get('/onts/ontsee/' + svrid + '/' + ontid, function( tdata ) {
+            $('#terms').val(tdata);
+        });
     });
 
 });

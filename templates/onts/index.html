@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block title %} Ontology List {% endblock %}
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-10 offset-md-1">
+            <div class="card mt-2">
+                <div class="card-header pt-1 pb-1">
+                    <div class="row g-3">
+                        <div class="col-5">
+                            <h4>Available Ontologies ({{ onts|length }})</h4>
+                        </div>
+                        <div class="col-5">
+                            <input id="listsrc" placeholder="Search ontologies (or scroll)" class="form-control form-control-sm" aria-label="Search ontologies" data-search-override="true" type="text"/>
+                        </div>
+                        <div class="col-2">
+                            <a href="/onts/add/" type="button" class="btn btn-sm btn-primary float-end">Add Ontology</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="onts" class="card-body list-group list-group-flush panel-responsive-220 py-0 pr-0">
+                    {% for ont in onts %}
+                        {% if ont.name %}
+                            <a class="list-group-item item py-1" data-content="{{ ont.name|lower }}" href="/onts/view/{{ ont.id }}">{{ ont.name }} ({{ ont.ns }}) <b>[{{ ont.server.abbrev }}]</b></a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

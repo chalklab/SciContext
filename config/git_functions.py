@@ -11,9 +11,9 @@ def addctxfile(path, message, file, repo="scidata", token=ghtoken):
     :param message: commit message
     :param file: the file contents
     :param repo: the repo name
-    :param token: github user token
+    :param token: GitHub user token
 
-    :return None
+    return None
     :raises Exception: if file with the specified name cannot be found in the repo
     """
 

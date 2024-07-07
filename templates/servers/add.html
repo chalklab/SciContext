@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="row mt-2">
+        <div class="col col-12 col-md-8 offset-md-2">
+            <div class="card mt-2">
+                <div class="card-header pt-1 pb-1">
+                    <div class="row">
+                        <div class="col-12">
+                            <h4 class="mb-0">Add Ontology Server</h4>
+                        </div>
+                    </div>
+                </div>
+                <div id="form" class="card-body panel-responsive-220">
+                    <form id="addform" action="/servers/add/" method="post">
+                        {% csrf_token %}
+                        <div class="row ps-2 pe-2 mb-3">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="" aria-label="Name" />
+                        </div>
+                        <div class="row ps-2 pe-2 mb-3">
+                            <input type="text" class="form-control" id="abbrev" name="abbrev" placeholder="Abbreviation" value="" aria-label="Abbreviation"/>
+                        </div>
+                        <div class="row ps-2 pe-2 mb-3">
+                            <input type="text" class="form-control" id="desc" name="desc" placeholder="Description" value="" aria-label="Description"/>
+                        </div>
+                        <div class="row ps-2 pe-2 mb-3">
+                            <input type="text" class="form-control" id="home" name="home" placeholder="Homepage" value="" aria-label="Homepage"/>
+                        </div>
+                        <div class="row ps-2 pe-2 mb-3">
+                            <input type="text" class="form-control" id="apiurl" name="apiurl" placeholder="API URL" value="" aria-label="API URL" />
+                        </div>
+                        <div class="row ps-2 pe-2 mb-3">
+                            <input type="text" class="form-control" id="apikey" name="apikey" placeholder="API Key (optional, may need account)" value="" aria-label="API Key  (optional, may need account)"/>
+                        </div>
+                        <div class="row ps-2 pe-2 mb-3">
+                            <input type="text" class="form-control" id="headers" name="headers" placeholder="Headers (JSON) (optional)" value="" aria-label="Headers (JSON) (optional)"/>
+                        </div>
+                        <div class="row ps-2 pe-2 mb-3">
+                            <select id="type" name="type" class="form-control col-md-8">
+                                <option value="">Choose the server type</option>
+                                <option value="ols">EBI OLS4</option>
+                                <option value="bio">OntoPortal</option>
+                                <option value="bee">Ontobee</option>
+                                <option value="otr">Other</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="float-end">
+                                <input type="submit" value="Add"/>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}

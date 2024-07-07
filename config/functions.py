@@ -1,6 +1,5 @@
 """ functions file for the contexts app"""
-from config.models import *
-from config.ols_functions import *
+from config.svr_functions import *
 import datetime
 
 
@@ -25,11 +24,36 @@ def getctx(ctxid):
     return ctx
 
 
-def getflds(cxtid):
+def getflds():
     """get a list of fields for a context file"""
-    ctx = Contexts.objects.get(id=cxtid)
+    flds = Fields.objects.all()
     # cfs = ctx.values_list('id', 'field', 'term__title').order_by('field'))
-    return ctx
+    return flds
+
+
+def getsvrs():
+    """get a list of fields for a context file"""
+    svrs = Servers.objects.all().order_by('name')
+    return svrs
+
+
+def getsvr(svrid):
+    """get a list of fields for a context file"""
+    svr = Servers.objects.get(id=svrid)
+    return svr
+
+
+def svrontsdb(svrid):
+    """get a list of ontologies from a server"""
+    onts = list(Onts.objects.filter(server_id=svrid))
+    return onts
+
+
+def ctxflds(cxtid):
+    """get a list of fields for a context file"""
+    fldids = ContextsFields.objects.get(context_id=cxtid).values_list('field_id', flat=True)
+    flds = Fields.objects.filter(fld_id__in=fldids)
+    return flds
 
 
 def getfld(fldid):
@@ -38,74 +62,117 @@ def getfld(fldid):
     return fld
 
 
-def getnsps():
+def getonts():
     """get a list of namespaces"""
-    spaces = Nspaces.objects.all().order_by('name')
-    return spaces
+    onts = Onts.objects.filter(name__isnull=False).order_by('name')
+    return onts
 
 
-def getnsp(nsid):
+def getont(ontid):
     """get the data about a namespace"""
-    space = Nspaces.objects.get(id=nsid)
-    return space
+    ont = Onts.objects.get(id=ontid)
+    return ont
 
 
-def nsaliases():
-    aliases = Nspaces.objects.all().values_list('ns', flat=True).order_by('ns')
+def ontaliases():
+    aliases = Onts.objects.all().values_list('ns', flat=True).order_by('ns').distinct()
     return aliases
 
 
-def gettrms():
-    """get the list of ont terms"""
-    return Terms.objects.all().order_by('title')
+def gettrms(ontid=None):
+    """get the list of all terms (or only those for one ontology)"""
+    if ontid:
+        trms = Terms.objects.filter(ont_id=ontid).order_by('title')
+    else:
+        trms = Terms.objects.all().order_by('title')
+    return trms
 
 
-def gettrm(otid):
+def gettrm(ontid):
     """get the data for an ont term"""
-    term = Terms.objects.get(id=otid)
+    term = Terms.objects.get(id=ontid)
     return term
 
 
-def termsbyns(nsid):
-    """get the terms from a specific namespace"""
-    terms = Terms.objects.all().filter(nspace_id=nsid)
+def termsbyont(ontid):
+    """get the terms from a specific ontology"""
+    terms = Terms.objects.all().filter(ont_id=ontid)
     return terms
 
 
-def ctxonts():
+def ctxonts(svrid):
     """
-    gets the ontologies in ols and then filters for only those already in contexts
+    gets the ontologies and then filters for only those already in contexts
     namespaces are already aligned otherwise this will not work
     """
     kept = []
-    aliases = list(nsaliases())
+    aliases = list(ontaliases())
     print(aliases)
-    allonts = olsonts()
-    allonts.sort(key=lambda tup: tup[0])
-    for i, ont in enumerate(allonts):
+    sonts = svronts(svrid)
+    sonts.sort(key=lambda tup: tup[0])
+    for i, ont in enumerate(sonts):
         if ont[0] in aliases:
             kept.append(ont)
-    return allonts
+    return sonts
 
 
-def olsload(nss):
-    # populate the nspaces table with namesplaces from OLS
-    for ns in nss:
-        if not ns['ns']:
-            ns['ns'] = "NA"
-        if not ns['title']:
-            ns['name'] = "NA"
-        if not ns['path']:
-            ns['path'] = "NA"
-        if not ns['homepage']:
-            ns['homepage'] = "NA"
-        n, created = Nspaces.objects.get_or_create(
-            name=ns['title'],
-            ns=ns['ns'],
-            path=ns['path'],
-            homepage=ns['homepage'],
-            updated=datetime.datetime.now()
+def allonts():
+    pass
+
+
+def svrload(svrid):
+    # get onts from server
+    onts = svronts(svrid)
+    # populate the onts table with namesplaces from OLS
+    for ont in onts:
+        if not ont['ns']:
+            ont['ns'] = "NA"
+        if not ont['title']:
+            ont['name'] = "NA"
+        if not ont['description']:
+            ont['description'] = "NA"
+        if not ont['path']:
+            ont['path'] = "NA"
+        if not ont['homepage']:
+            ont['homepage'] = "NA"
+        o, created = Onts.objects.get_or_create(
+            name=ont['title'],
+            description=ont['description'],
+            ns=ont['ns'],
+            path=ont['path'],
+            homepage=ont['homepage'],
+            server_id=svrid
         )
-        if not created:
-            n.save()
+        if created:
+            o.updated = datetime.datetime.now()
+            o.save()
+
+    return True
+
+
+def ontload(svrid, ontid):
+    # get an ontologies' set of terms in a server
+    trms = svronttrms(svrid, ontid)
+    for trm in trms:
+        if not trm['title']:
+            trm['title'] = "NA"
+        if not trm['code']:
+            trm['code'] = "NA"
+        if not trm['description']:
+            trm['description'] = "NA"
+        if not trm['visible']:
+            trm['visible'] = "NA"
+        if not trm['ontid']:
+            trm['ontid'] = "NA"
+        t, created = Terms.objects.get_or_create(
+            title=trm['label'],
+            code=trm['code'],
+            description=trm['description'],
+            visible='yes',
+            ont_id=trm['ontid']
+        )
+        if created:
+            t.updated = datetime.datetime.now()
+            t.save()
+
     return True

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %} Ontology View {% endblock %}
+{% block content %}
+    <h3>Ontology: {{ ont.name }}</h3>
+    <div class="row">
+        <div class="col-10">
+            <ul>
+                <li>Alias: {{ ont.ns }}</li>
+                {% if ont.description %}
+                    <li>Description: {{ ont.description }}</li>
+                {% endif %}
+                <li>Path: {% if ont.path is None or ont.path == "NA" %}NA
+                    {% else %}
+                        <a href="{{ ont.path }}" target="_blank">{{ ont.path }}</a>
+                    {% endif %}
+                </li>
+                <li>Homepage: 
+                    {% if ont.homepage is None or ont.homepage == "NA" %}NA
+                    {% else %}
+                        <a href="{{ ont.homepage }}" target="_blank">{{ ont.homepage }}</a>
+                    {% endif %}
+                </li>
+            </ul>
+        </div>
+        <div class="col col2">
+            <button id="loadtrms" data-svrid="{{ server.id }}" data-ontid="{{ ont.id }}" type="button" class="btn btn-info float-right">Update Terms</button>
+        </div>
+        <div id="terms" class="col-12">
+            <h3>Ontology Terms</h3>
+            <ul>
+                {% for term in trms %}
+                <li><a href="/fields/term/{{ term.id }}">{{ term.title }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}

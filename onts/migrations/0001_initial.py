@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('updated', models.DateTimeField()),
             ],
             options={
-                'db_table': 'nspaces',
+                'db_table': 'onts',
                 'managed': True,
             },
         ),

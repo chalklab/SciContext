@@ -19,5 +19,4 @@ tests/report/
 .idea/
 config/localsettings.py
 static/replacelog.txt
-db.sqlite3
 Pipfile.lock

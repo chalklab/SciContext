@@ -26,18 +26,38 @@ class Contexts(models.Model):
         app_label = 'contexts'
 
 
-class Nspaces(models.Model):
-    """ contexts nspaces table """
+class Servers(models.Model):
     name = models.CharField(max_length=64)
-    ns = models.CharField(max_length=8)
-    path = models.CharField(unique=True, max_length=64)
+    abbrev = models.CharField(max_length=64, blank=True, null=True)
+    description = models.CharField(max_length=128)
+    type = models.CharField(max_length=8, blank=True, null=True)
     homepage = models.CharField(max_length=128)
+    apiurl = models.CharField(max_length=256)
+    apikey = models.CharField(max_length=256, blank=True, null=True)
+    headers = models.CharField(max_length=256, blank=True, null=True)
     updated = models.DateTimeField()
 
     class Meta:
         managed = True
-        db_table = 'nspaces'
-        app_label = 'nspaces'
+        db_table = 'servers'
+        app_label = 'servers'
+
+
+class Onts(models.Model):
+    """ contexts onts table """
+    name = models.CharField(max_length=64)
+    ns = models.CharField(max_length=8)
+    path = models.CharField(unique=True, max_length=64)
+    description = models.CharField(max_length=512, blank=True, null=True)
+    homepage = models.CharField(max_length=128)
+    server = models.ForeignKey(Servers, on_delete=models.DO_NOTHING, db_column='server_id')
+    updated = models.DateTimeField()
+
+    class Meta:
+        managed = True
+        ordering = 'name',
+        db_table = 'onts'
+        app_label = 'onts'
 
 
 class Terms(models.Model):
@@ -45,7 +65,7 @@ class Terms(models.Model):
     title = models.CharField(max_length=256)
     definition = models.CharField(max_length=2048, blank=True, null=True)
     code = models.CharField(max_length=64)
-    nspace = models.ForeignKey(Nspaces, on_delete=models.DO_NOTHING, db_column='nspace_id')
+    ont = models.ForeignKey(Onts, on_delete=models.DO_NOTHING, db_column='ont_id', default=None)
     notes = models.CharField(max_length=64, blank=True, null=True)
     visible = models.CharField(max_length=8, blank=True, null=True)
     updated = models.DateTimeField()
