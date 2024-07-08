@@ -35,3 +35,11 @@
 .item:hover {
     color: blue;
 }
+
+.emph_blue {
+    color: blue;
+}
+
+.emph_red {
+    color: darkred;
+}

@@ -30,7 +30,6 @@ def add(request):
         fld.name = data['name']
         fld.description = data['description']
         fld.filename = data['filename']
-        fld.subcontexts = ','.join(temp)  # bizarre syntax, but it works!
         fld.updated = datetime.now()
         fld.save()
         status = "success"
@@ -42,3 +41,5 @@ def add(request):
             return JsonResponse({'status': status, 'fldid': fld.id})
         else:
             return redirect('/fields/view/' + str(fld.id))
+    else:
+        return render(request, "fields/add.html")

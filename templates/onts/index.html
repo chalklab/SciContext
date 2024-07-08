@@ -20,7 +20,11 @@
                 <div id="onts" class="card-body list-group list-group-flush panel-responsive-220 py-0 pr-0">
                     {% for ont in onts %}
                         {% if ont.name %}
-                            <a class="list-group-item item py-1" data-content="{{ ont.name|lower }}" href="/onts/view/{{ ont.id }}">{{ ont.name }} ({{ ont.ns }}) <b>[{{ ont.server.abbrev }}]</b></a>
+                            <a class="list-group-item item py-1" data-content="{{ ont.name|lower }} {{ ont.server.abbrev|lower }}" href="/onts/view/{{ ont.id }}">
+                                {{ ont.name }} ({{ ont.ns }}) <b>[{{ ont.server.abbrev }}]</b> 
+                                <span class="emph_blue">({{ ont.trmcnt }} terms)</span>
+                                {% if ont.version %} <span class="emph_red">(Ver: {{ ont.version }})</span> {% endif %}
+                            </a>
                         {% endif %}
                     {% endfor %}
                 </div>

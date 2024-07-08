@@ -1,10 +1,28 @@
 {% extends 'base.html' %}
 {% block title %} Field List {% endblock %}
 {% block content %}
-    <h3>Current Fields</h3>
-    <ul>
-    {% for fld in fields %}
-        <li><a href="/fields/view/{{ fld.id }}">{{ fld.field }} ({{ fld.table }})</a></li>
-    {% endfor %}
-    </ul>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-10 offset-md-1">
+            <div class="card mt-2">
+                <div class="card-header pt-1 pb-1">
+                    <div class="row g-3">
+                        <div class="col-5">
+                            <h4>Saved Fields ({{ flds|length }})</h4>
+                        </div>
+                        <div class="col-5">
+                            <input id="listsrc" placeholder="Search fields (or scroll)" class="form-control form-control-sm" aria-label="Search fields" data-search-override="true" type="text"/>
+                        </div>
+                        <div class="col-2">
+                            <a href="/fields/add/" type="button" class="btn btn-sm btn-primary float-end">Add Field</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="flds" class="card-body list-group list-group-flush panel-responsive-220 py-0 pr-0">
+                    {% for fld in flds %}
+                        <a class="list-group-item item py-1" data-content="{{ fld.name|lower }}" href="/fields/view/{{ fld.id }}">{{ fld.name }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

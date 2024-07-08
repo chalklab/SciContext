@@ -1,6 +1,6 @@
 """ functions file for the contexts app"""
 from config.svr_functions import *
-import datetime
+from datetime import datetime
 
 
 def getprjs():
@@ -39,7 +39,6 @@ def getctx(ctxid):
 def getflds():
     """get a list of fields for a context file"""
     flds = Fields.objects.all()
-    # cfs = ctx.values_list('id', 'field', 'term__title').order_by('field'))
     return flds
 
 
@@ -156,7 +155,7 @@ def svrload(svrid):
             server_id=svrid
         )
         if created:
-            o.updated = datetime.datetime.now()
+            o.updated = datetime.now()
             o.save()
 
     return True
@@ -184,7 +183,7 @@ def ontload(svrid, ontid):
             ont_id=trm['ontid']
         )
         if created:
-            t.updated = datetime.datetime.now()
+            t.updated = datetime.now()
             t.save()
 
     return True

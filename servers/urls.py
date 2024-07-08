@@ -8,5 +8,7 @@ urlpatterns = [
     path("add/", views.add, name='Add server'),
     path("view/<svrid>", views.view, name='Server view'),
     path("svrget/<svrid>", views.svrget, name='Server ontology update (JS)'),
-    path("svrupd/<svrid>", views.svrupd, name='Load onts in server to DB'),
+    path("ontupd/<svrid>", views.ontupd, name='Load onts in server to DB'),
+    path("updontcnt/<svrid>", views.updontcnt, name='Update term count in DB'),
+    path("updontvrs/<svrid>", views.updontvrs, name='Update version in DB'),
 ]

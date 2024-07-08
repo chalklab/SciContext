@@ -143,7 +143,7 @@ $(document).ready(function() {
     });
 
     // remove a field entry
-    $(".delcwk").on('click', function () {
+    $(".delfld").on('click', function () {
         let cwk = $(this);
         let cwkid = cwk.attr('cwkid');
         $.post('/xwalks/delete/', {cwkid: cwkid})

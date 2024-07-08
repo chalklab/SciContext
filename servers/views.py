@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from config.functions import *
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+from datetime import datetime
 
 
 # Create your views here.
@@ -45,6 +46,7 @@ def add(request):
 
     return render(request, "servers/add.html", {})
 
+
 # JavaScript AJAX functions
 
 
@@ -56,7 +58,34 @@ def svrget(request, svrid):
 
 
 @csrf_exempt
-def svrupd(request, svrid):
+def ontupd(request, svrid):
     # load DB with a list of ontologies on server
     svrload(svrid)
     return redirect('/servers/view/' + str(svrid))
+
+
+@csrf_exempt
+def updontcnt(request, svrid):
+    onts = svronts(svrid)
+    output = []
+    for ont in onts:
+        o = Onts.objects.get(ns=ont['ns'], server_id=svrid)
+        o.trmcnt = ont['trmcnt']
+        o.save()
+        ostr = ont['ns'] + " updated"
+        output.append(ostr)
+    return JsonResponse(output, safe=False, status=200)
+
+
+@csrf_exempt
+def updontvrs(request, svrid):
+    onts = svronts(svrid)
+    output = []
+    for ont in onts:
+        o = Onts.objects.get(ns=ont['ns'], server_id=svrid)
+        o.version = ont['version']
+        o.updated = datetime.now()
+        o.save()
+        ostr = ont['ns'] + " updated"
+        output.append(ostr)
+    return JsonResponse(output, safe=False, status=200)

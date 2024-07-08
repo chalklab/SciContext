@@ -1,22 +1,25 @@
 from ols_py.client import *
-from operator import itemgetter
 
 client = Ols4Client()
-resp = client.get_terms('iao', params={"page": 0, "size": 1000})
-terms = resp.embedded.terms
-# terms = sorted(temp, key=itemgetter('label'))
-print(terms)
+resp = client.search('name', params={"exact": True})
+docs = resp.response.docs
+for doc in docs:
+    print(doc.iri, doc.label, doc.description)
 exit()
 for term in terms:
-    print(term['title'])
+    print(term)
+    exit()
 exit()
-
-
-ontid = 524  # abcd
-terms = resp.embedded.terms
+# for term in terms:
+#     print(term['title'])
+# exit()
+#
+#
+# terms = resp.embedded.terms
+ontid = 334  # iao
 tlist = []
 for term in terms:
-    tlist.append({'title': term.label, 'code': term.ontology_name,
+    tlist.append({'title': term.label, 'code': term.ontology_name, 'iri': str(term.iri),
                   'description': term.description[0], 'visible': 'yes', 'ontid': ontid})
     print(tlist)
     # t, created = Terms.objects.get_or_create(

@@ -26,11 +26,11 @@ class Projects(models.Model):
 class Contexts(models.Model):
     name = models.CharField(max_length=64)
     project = models.ForeignKey(Projects, on_delete=models.DO_NOTHING, db_column='project_id', blank=True, null=True)
-    description = models.CharField(max_length=128)
-    version = models.CharField(max_length=8)
-    vocab = models.CharField(max_length=64)
-    base = models.CharField(max_length=128)
-    filename = models.CharField(max_length=128)
+    description = models.CharField(max_length=128, blank=True, null=True)
+    version = models.CharField(max_length=8, blank=True, null=True)
+    vocab = models.CharField(max_length=64, blank=True, null=True)
+    base = models.CharField(max_length=128, blank=True, null=True)
+    filename = models.CharField(max_length=128, blank=True, null=True)
     subcontexts = models.CharField(max_length=256, blank=True, null=True)
     updated = models.DateTimeField()
 
@@ -76,6 +76,8 @@ class Onts(models.Model):
     description = models.CharField(max_length=512, blank=True, null=True)
     homepage = models.CharField(max_length=128)
     server = models.ForeignKey(Servers, on_delete=models.DO_NOTHING, db_column='server_id')
+    trmcnt = models.IntegerField(blank=True, null=True)
+    version = models.CharField(max_length=16, blank=True, null=True)
     updated = models.DateTimeField()
 
     class Meta:
@@ -90,6 +92,7 @@ class Terms(models.Model):
     title = models.CharField(max_length=256)
     definition = models.CharField(max_length=2048, blank=True, null=True)
     code = models.CharField(max_length=64)
+    iri = models.CharField(max_length=256, blank=True, null=True)
     ont = models.ForeignKey(Onts, on_delete=models.DO_NOTHING, db_column='ont_id', default=None)
     notes = models.CharField(max_length=64, blank=True, null=True)
     visible = models.CharField(max_length=8, blank=True, null=True)

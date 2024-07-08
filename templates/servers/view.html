@@ -13,9 +13,6 @@
                 {% if server.apiurl %}
                     <li>API URL: <a href="{{ server.apiurl }}" target="_blank">{{ server.apiurl }}</a></li>
                 {% endif %}
-                {% if server.headers %}
-                    <li>API Headers (JSON): {{ server.headers }}</li>
-                {% endif %}
                 <li>Type: {{ server.type }}</li>
             </ul>
         </div>
@@ -27,18 +24,22 @@
         <div class="col col-10 offset-1 mt-2">
             <div class="card">
                 <div class="card-header">
-                    <div class="float-start">
-                        <h4>Available Ontologies ({{ server.onts_set.all|length }})</h4>
-                    </div>
-                        <div class="float-end">
-                            <label for="listsrc"></label>
-                            <input id="listsrc" placeholder="Search..." class="form-control form-control-sm" data-search-override="true" type="text"/>
+                    <div class="row g-3">
+                        <div class="col-5">
+                            <h4>Available Ontologies ({{ server.onts_set.all|length }})</h4>
                         </div>
+                        <div class="col-5">
+                            <input id="listsrc" placeholder="Search ontologies (or scroll)" class="form-control form-control-sm" aria-label="Search ontologies" data-search-override="true" type="text"/>
+                        </div>
+                        <div class="col-2">
+                            <a href="/onts/add/" type="button" class="btn btn-sm btn-primary float-end">Add Ontology</a>
+                        </div>
+                    </div>
                 </div>
                 <div class="list-group list-group-flush card-body p-0 panel-responsive-370">
                     {% for ont in server.onts_set.all %}
                         {% if ont.name %}
-                        <a class="list-group-item item" data-content="{{ ont.name|lower }}" href="/onts/view/{{ ont.id }}">{{ ont.name }}</a>
+                            <a class="list-group-item item py-1" data-content="{{ ont.name|lower }}" href="/onts/view/{{ ont.id }}">{{ ont.name }} ({{ ont.trmcnt }} terms)</a>
                         {% endif %}
                     {% endfor %}
                 </div>

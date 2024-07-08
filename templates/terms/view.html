@@ -3,12 +3,12 @@
 {% block content %}
     <div class="row">
         <div class="col col-10 mt-2">
-            <h3>{{ term.title }}</h3>
+            <h3>Term: {{ term.title }}</h3>
             <ul>
                 <li>Definition: {{ term.definition }}</li>
-                <li>SciData Section: {{ term.sdsection }} </li>
-                <li>SciData Subsection: {{ term.sdsubsection }}</li>
-                <li>URI: <a href="{{ uri }}" target="_blank">{{ uri }}</a></li>
+                <li>IRI: <a href="{{ term.iri }}" target="_blank">{{ term.iri }}</a><i class="bi bi-link"></i></li>
+                <li>Short IRI: {{ nsiri }}</li>
+                <li>In Ontology: <a href="/onts/view/{{ term.ont.id }}">{{ term.ont.name }}</a></li>
             </ul>
             <h4>Used in Contexts</h4>
             <ul>

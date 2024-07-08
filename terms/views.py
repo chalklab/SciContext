@@ -13,9 +13,8 @@ def index(request):
 def view(request, trmid):
     """view to show all data about an ont term"""
     term = gettrm(trmid)
-    ont = getont(term.ont_id)
-    uri = term.url.replace(ont.ns + ':', ont.path)
-    return render(request, "terms/view.html", {'term': term, 'uri': uri})
+    nsiri = term.ont.ns + ':' + term.code
+    return render(request, "terms/view.html", {'term': term, 'nsiri': nsiri})
 
 
 def add(request):

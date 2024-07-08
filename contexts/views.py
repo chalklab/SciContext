@@ -13,8 +13,8 @@ def home(request):
 
 
 def index(request):
-    ctxs = lstctxs(None)
-    return render(request, "contexts/index.html", {'ctxlist': ctxs})
+    ctxs = getctxs()
+    return render(request, "contexts/index.html", {'ctxs': ctxs})
 
 
 def view(request, ctxid):

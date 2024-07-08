@@ -1,0 +1,51 @@
+{% block form %}
+    <form id="fieldform" data-fldid="" data-ctxid="">
+        <div class="container-fluid">
+            <div class="input-group row mb-2">
+                <label for="field" class="input-group-text col-3" title="JSON-LD field name (required)">JSON-LD field name*</label>
+                <input type="text" data-old="" class="form-control col-9 updfld" id="field"/>
+            </div>
+            <div class="input-group row mb-2">
+                <label for="term_id" class="input-group-text col-3" title="Ontology term (required)">Ontology term*</label>
+                <select class="form-control col-9 updtrm" id="term_id">
+                    <option value="">Choose...</option>
+                    {% for ont in onts %}
+                        <option value="{{ ont.id }}">{{ ont.title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="input-group row mb-2">
+                <label for="category" class="input-group-text col-3" title="Metadata category (optional)">Metadata category</label>
+                <input type="text" data-old="" class="form-control col-9 updfld" id="category"/>
+            </div>
+            <div class="input-group row mb-2">
+                <label for="container" class="input-group-text col-3" title="@container (optional)">@container</label>
+                <select multiple size="3" class="form-control col-9 updfld" id="container">
+                    <option value="">Choose...</option>
+                    <option value="graph">@graph</option>
+                    <option value="id">@id</option>
+                    <option value="index">@index</option>
+                    <option value="lang">@language</option>
+                    <option value="list">@list</option>
+                    <option value="set">@set</option>
+                    <option value="type">@type</option>
+                </select>
+            </div>
+            <div class="input-group row mb-2">
+                <label for="datatype" class="input-group-text col-3">Datatype*</label>
+                <select class="form-control col-9 updfld" id="datatype">
+                    <option value="">Choose XSD Datatype...</option>
+                    <option value="string">String (most common)</option>
+                    <option value="dateTime">Date/Time</option>
+                    <option value="decimal">Decimal</option>
+                    <option value="float">Float (32 bit)</option>
+                    <option value="double">Float (64 bit)</option>
+                    <option value="integer">Integer</option>
+                    <option value="nonNegativeInteger">Non-Negative Integer</option>
+                    <option value="anyURI">URI</option>
+                    <option value="@id">@id</option>
+                </select>
+            </div>
+        </div>
+    </form>
+{% endblock %}
