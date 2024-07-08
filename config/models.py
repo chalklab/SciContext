@@ -106,9 +106,8 @@ class Fields(models.Model):
     term = models.ForeignKey(Terms, on_delete=models.DO_NOTHING, db_column='term_id')
     datatype = models.CharField(max_length=8)
     container = models.CharField(max_length=64, blank=True, null=True)
-    cardinality = models.PositiveIntegerField(blank=True, null=True)
     category = models.CharField(max_length=64, blank=True, null=True)
-    unit = models.CharField(max_length=32, blank=True, null=True)
+    newname = models.CharField(max_length=64, blank=True, null=True)
     comments = models.CharField(max_length=128, blank=True, null=True)
     updated = models.DateTimeField()
 

@@ -1,8 +1,14 @@
 from ols_py.client import *
+from operator import itemgetter
 
 client = Ols4Client()
-resp = client.get_terms('bao')
-print(resp)
+resp = client.get_terms('iao', params={"page": 0, "size": 1000})
+terms = resp.embedded.terms
+# terms = sorted(temp, key=itemgetter('label'))
+print(terms)
+exit()
+for term in terms:
+    print(term['title'])
 exit()
 
 

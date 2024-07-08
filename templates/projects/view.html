@@ -2,7 +2,7 @@
 {% block title %} Project View {% endblock %}
 {% block content %}
     <div class="row">
-        <div class="col col-8 offset-1 mt-2">
+        <div class="col col-10 offset-1 mt-2">
             <h3>{{ project.name }}</h3>
             <ul>
                 <li>Description: {{ project.description }}</li>
@@ -13,20 +13,24 @@
     </div>
     <div class="row">
         <div class="col col-10 offset-1 mt-2">
-            <div class="card">
-                <div class="card-header">
-                    <div class="float-start">
-                        <h4>Context Files ({{ project.onts_set.all|length }})</h4>
-                    </div>
-                        <div class="float-end">
-                            <label for="listsrc"></label>
-                            <input id="listsrc" placeholder="Search..." class="form-control form-control-sm" data-search-override="true" type="text"/>
+            <div class="card mt-2">
+                <div class="card-header pt-1 pb-1">
+                    <div class="row">
+                        <div class="col-5">
+                            <h4>Context Files ({{ project.contexts_set.all|length }})</h4>
                         </div>
+                        <div class="col-5">
+                            <input id="listsrc" placeholder="Search context files..." class="form-control form-control-sm" data-search-override="true" type="text" aria-label=""/>
+                        </div>
+                        <div class="col-2 px-0">
+                            <a id="addctx" data-ctxid="{{ project.context.id }}" type="button" data-toggle="modal" class="btn btn-sm btn-success float-end">Add Context</a>
+                        </div>
+                    </div>
                 </div>
                 <div class="list-group list-group-flush card-body p-0 panel-responsive-370">
-                    {% for ont in server.onts_set.all %}
-                        {% if ont.name %}
-                        <a class="list-group-item item" data-content="{{ ont.name|lower }}" href="/onts/view/{{ ont.id }}">{{ ont.name }}</a>
+                    {% for ctx in project.contexts_set.all %}
+                        {% if ctx.name %}
+                            <a class="list-group-item item" data-content="{{ ctx.name|lower }}" href="/contexts/view/{{ ctx.id }}">{{ ctx.name }}</a>
                         {% endif %}
                     {% endfor %}
                 </div>

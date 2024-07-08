@@ -38,8 +38,8 @@
                             <label id="ctx_subctxs" for="subctxs" class="col-form-label" title="Contexts to be referenced in the context file">Sub-Contexts:</label>
                             <select multiple size="{% if ctxs %}5{% else %}1{% endif %}" class="form-control" name="subctxs" id="subctxs" aria-describedby="subctxs" {% if not ctxs %}disabled{% endif %}>
                                 <option value="">{% if ctxs %}Choose...{% else %}Disabled (no contexts){% endif %}</option>
-                                {% for id, name in ctxs %}
-                                    <option value="{{ id }}">{{ name }}</option>
+                                {% for ctx in ctxs %}
+                                    <option value="{{ ctx.id }}">{{ ctx.name }}</option>
                                 {% endfor %}
                             </select>
                         </div>

@@ -21,9 +21,6 @@
                 {% endif %}
             </ul>
         </div>
-        <div class="col-2">
-            <button id="createctx" type="button" class="btn btn-info float-right">Create Context</button>
-        </div>
     </div>
     <div class="row">
         <div class="col-10 offset-1">
@@ -37,22 +34,22 @@
                             <input id="listsrc" placeholder="Search fields (or scroll)" class="form-control form-control-sm float-right" data-search-override="true" type="text" aria-label="Search fields (or scroll)"/>
                         </div>
                         <div class="col-2 px-0">
-                            <a id="addfld" data-ctxid="{{ context.id }}" type="button" data-toggle="modal" data-target="#cwkmodal" class="btn btn-sm btn-success float-end">Add</a>
+                            <a id="addfld" data-ctxid="{{ context.id }}" type="button" data-bs-toggle="modal" data-bs-target="#fldmodal" class="btn btn-sm btn-success float-end">Add Field</a>
                         </div>
                     </div>
                 </div>
                 <div class="card-body list-group list-group-flush panel-responsive-320 py-0 pr-0">
-                <div id="cwks" class="row">
+                <div id="flds" class="row">
                     {% for fld in fields %}
                         <div class="col-11 pr-0">
-                            <a id="cwk{{ fld.id }}" class="editcwk list-group-item items py-1" data-fldid="{{ fld.id }}" data-toggle="modal" data-target="#cwkmodal" style="cursor: pointer;">
-                                <b>{{ cw.table }}:{{ cw.field }} -></b> {% if cw.newname %}
+                            <a id="fld{{ fld.id }}" class="editfld list-group-item items py-1" data-fldid="{{ fld.id }}" data-toggle="modal" data-target="#fldmodal" style="cursor: pointer;">
+                                <b>{{ fld.table }}:{{ fld.field }} -></b> {% if fld.newname %}
                                 {{ fld.newname }} {% else %} {{ fld.field }} {% endif %} ({{ fld.datatype }})
                                 means <em>{{ fld.term.title }}</em> [{{ fld.term.url }}]
                             </a>
                         </div>
                         <div class="col-1 pl-0">
-                            <button class="btn btn-sm btn-danger delcwk col-12" data-fldid="{{ fld.id }}" title="Delete">X</button>
+                            <button class="btn btn-sm btn-danger delfld col-12" data-fldid="{{ fld.id }}" title="Delete">X</button>
                         </div>
                     {% endfor %}
                 </div>
@@ -60,76 +57,71 @@
             </div>
         </div>
     </div>
-    <div id="cwkmodal" class="modal" tabindex="-1">
-        <div class="modal-dialog">
+    <div id="fldmodal" class="modal fade" tabindex="-1" aria-labelledby="fldModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Add/Edit Field</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="modalform" data-fldid="" data-cxtid="">
-                        <div class="form-group row">
-                            <label for="table" class="col-form-label col-md-3" title="From database (optional)">Table:</label>
-                            <input type="text" data-old="" class="form-control col-md-8 updcwk" id="table"/>
-                        </div>
-                        <div class="form-group row">
-                            <label for="field" class="col-form-label col-md-3" title="Field name in source (required)">Field:</label>
-                            <input type="text" data-old="" class="form-control col-md-8 updfld" id="field"/>
-                        </div>
-                        <div class="form-group row">
-                            <label for="term_id" class="col-form-label col-md-3">Term:</label>
-                            <select class="form-control col-md-8 updtrm" id="term_id">
-                                <option value="">Choose Ontology Term</option>
-                                {% for ont in onts %}
-                                    <option value="{{ ont.id }}">{{ ont.title }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="form-group row">
-                            <label for="sdsection" class="col-form-label col-md-3">Section:</label>
-                            <select class="form-control col-md-8 updcwk" id="sdsection">
-                                <option value="">Choose SciData Section</option>
-                                <option value="methodology">Methodology</option>
-                                <option value="system">System</option>
-                                <option value="dataset">Dataset</option>
-                                <option value="metadata">Metadata (unusual)</option>
-                            </select>
-                        </div>
-                        <div class="form-group row">
-                            <label for="sdsubsection" class="col-form-label col-md-3" title="Aspect/Facet Type">Type:</label>
-                            <input type="text" data-old="" class="form-control col-md-8 updcwk" id="sdsubsection"/>
-                        </div>
-                        <div class="form-group row">
-                            <label for="newname" class="col-form-label col-md-3" title="New field name (optional)">Name:</label>
-                            <input type="text" data-old="" class="form-control col-md-8 updcwk" id="newname"/>
-                        </div>
-                        <div class="form-group row">
-                            <label for="category" class="col-form-label col-md-3" title="Class of metadata (optional)">Category:</label>
-                            <input type="text" data-old="" class="form-control col-md-8 updcwk" id="category"/>
-                        </div>
-                        <div class="form-group row">
-                            <label for="datatype" class="col-form-label col-md-3">Datatype:</label>
-                            <select class="form-control col-md-8 updcwk" id="datatype">
-                                <option value="">XSD Datatype</option>
-                                <option value="string">String (most common)</option>
-                                <option value="dateTime">Date/Time</option>
-                                <option value="decimal">Decimal</option>
-                                <option value="float">Float (32 bit)</option>
-                                <option value="double">Float (64 bit)</option>
-                                <option value="integer">Integer</option>
-                                <option value="nonNegativeInteger">Non-Negative Integer</option>
-                                <option value="anyURI">URI</option>
-                                <option value="@id">@id</option>
-                            </select>
+                    <form id="modalform" data-fldid="" data-ctxid="">
+                        <div class="container-fluid">
+                            <div class="input-group row mb-2">
+                                <label for="field" class="input-group-text col-3" title="JSON-LD field name (required)">JSON-LD field name*</label>
+                                <input type="text" data-old="" class="form-control col-9 updfld" id="field"/>
+                            </div>
+                            <div class="input-group row mb-2">
+                                <label for="term_id" class="input-group-text col-3" title="Ontology term (required)">Ontology term*</label>
+                                <select class="form-control col-9 updtrm" id="term_id">
+                                    <option value="">Choose...</option>
+                                    {% for ont in onts %}
+                                        <option value="{{ ont.id }}">{{ ont.title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="input-group row mb-2">
+                                <label for="newname" class="input-group-text col-3" title="New field name (optional)">New field name</label>
+                                <input type="text" data-old="" class="form-control col-9 updfld" id="newname"/>
+                            </div>
+                            <div class="input-group row mb-2">
+                                <label for="category" class="input-group-text col-3" title="Metadata class (optional)">Metadata catagory</label>
+                                <input type="text" data-old="" class="form-control col-9 updfld" id="category"/>
+                            </div>
+                            <div class="input-group row mb-2">
+                                <label for="container" class="input-group-text col-3" title="@container (optional)">@container</label>
+                                <select multiple size="3" class="form-control col-9 updfld" id="container">
+                                    <option value="">Choose...</option>
+                                    <option value="graph">@graph</option>
+                                    <option value="id">@id</option>
+                                    <option value="index">@index</option>
+                                    <option value="lang">@language</option>
+                                    <option value="list">@list</option>
+                                    <option value="set">@set</option>
+                                    <option value="type">@type</option>
+                                </select>
+                            </div>
+                            <div class="input-group row mb-2">
+                                <label for="datatype" class="input-group-text col-3">Datatype*</label>
+                                <select class="form-control col-9 updfld" id="datatype">
+                                    <option value="">Choose XSD Datatype...</option>
+                                    <option value="string">String (most common)</option>
+                                    <option value="dateTime">Date/Time</option>
+                                    <option value="decimal">Decimal</option>
+                                    <option value="float">Float (32 bit)</option>
+                                    <option value="double">Float (64 bit)</option>
+                                    <option value="integer">Integer</option>
+                                    <option value="nonNegativeInteger">Non-Negative Integer</option>
+                                    <option value="anyURI">URI</option>
+                                    <option value="@id">@id</option>
+                                </select>
+                            </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <p class="small">Data is updated in the background as you change entries...</p>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <p class="small">* Required field. Data is updated in the background as you change entries...</p>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>

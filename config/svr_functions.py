@@ -29,11 +29,14 @@ def svronttrms(svrid, ontid):
     tlist = []
     if svr.type == 'ols':
         client = Ols4Client(svr.apiurl)
-        resp = client.get_terms(ont.ns)
+        resp = client.get_terms(ont.ns, )
         terms = resp.embedded.terms
         for term in terms:
+            desc = None
+            if term.description:
+                desc = term.description[0]
             tlist.append({'title': term.label, 'code': term.ontology_name,
-                          'description': term.description[0], 'visible': 'yes', 'ontid': ontid})
+                          'description': desc, 'visible': 'yes', 'ontid': ontid})
     else:
         pass
     return tlist

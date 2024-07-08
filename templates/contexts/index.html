@@ -2,20 +2,16 @@
 {% block title %} Context List {% endblock %}
 {% block content %}
     <div class="row">
-        <div class="col-12 col-md-10 offset-md-1 mt-2">
+        <div class="col-8 offset-1 mt-2">
             <h3>Current Contexts</h3>
             <ul>
                 {% for id, name in ctxlist %}
                     <li><a href="/contexts/view/{{ id }}">{{ name }}</a></li>
                 {% endfor %}
             </ul>
-            <div class="btn-group" role="group" aria-label="Navigation buttons for contexts">
-                <a href="/contexts/add/" type="button" class="btn btn-primary">Add Context</a>
-                <a href="/terms/add/" type="button" class="btn btn-primary">Add Term</a>
-                <a href="/terms/" type="button" class="btn btn-primary">View Terms</a>
-                <a href="/onts/add/" type="button" class="btn btn-primary">Add Namespaces</a>
-                <a href="/onts/" type="button" class="btn btn-primary">View Namespaces</a>
-            </div>
+        </div>
+        <div class="col-2">
+            <button id="createctx" type="button" class="btn btn-info float-end">Create Context</button>
         </div>
     </div>
 {% endblock %}

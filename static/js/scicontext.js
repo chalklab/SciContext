@@ -91,24 +91,24 @@ $(document).ready(function() {
     });
 
     // add/update a new field entry...
-    $(".updcwk").on('change', function () {
+    $(".updfld").on('change', function () {
         let input = $(this);
         let field = input.attr('id');
         let form = input.closest('form');
-        let fldid = form.attr('fldid')
-        let cxtid = form.attr('cxtid')
+        let fldid = form.attr('data-fldid')
+        let ctxid = form.attr('data-ctxid')
         let value = input.val();
         // if dbid is empty create new entry in fields table
-        let url = 'http://127.0.0.1:8001/fields/add/';
+        let url = '/fields/add/';
         $.ajax({
             type: 'POST',
             dataType: "json",
             context: document.body,
             url: url,
-            data: {cwkid: fldid, cxtid: cxtid, field: field, value: value },
+            data: {fldid: fldid, cxtid: ctxid, field: field, value: value},
             success: function (resp) {
                 // note term title and url put in temp field (title|url)
-                let html = '<b>' + resp.table + ':' + resp.field + ' -> </b>';
+                let html = '<b>' + resp.field + ' -> </b>';
                 if(resp.newname) {
                     html += ' ' + resp.newname;
                 } else {
@@ -124,7 +124,7 @@ $(document).ready(function() {
                     $('#modalform').attr("fldid",resp.id);
                     // add the new entry to the page
                     let newitem = '<div class="col-11 pr-0">';
-                    newitem += '<a id="cwk' + resp.id + '" class="editfld list-group-item items py-1" data-fldid="' + resp.id + '" data-toggle="modal" data-target="#fldmodal" style="cursor: pointer;">' + html + '</a>';
+                    newitem += '<a id="fld' + resp.id + '" class="editfld list-group-item items py-1" data-fldid="' + resp.id + '" data-toggle="modal" data-target="#fldmodal" style="cursor: pointer;">' + html + '</a>';
                     newitem += '</div><div class="col-1 pl-0">';
                     newitem += '<button class="btn btn-sm btn-danger delcwk col-12" data-fldid="' + resp.id + '" title="Delete">X</button>'
                     newitem += '</div>';
@@ -198,17 +198,17 @@ $(document).ready(function() {
         return false;
     });
 
-    // add a new field entry
+    // config the modal for a new field entry
     $("#addfld").on('click', function () {
         // clear form
         let form = $('#modalform');
         form[0].reset();
-        form.attr('fldid','');
-        form.attr('cxtid','');
+        form.attr('data-fldid','');
+        form.attr('data-ctxid','');
         // process
         let btn = $(this);
-        let cxtid = btn.attr('cxtid');
-        form.attr("cxtid",cxtid);
+        let ctxid = btn.attr('data-ctxid');
+        form.attr("data-ctxid",ctxid);
     });
 
     // edit a field entry

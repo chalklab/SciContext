@@ -25,11 +25,12 @@ def view(request, ctxid):
     else:
         subids = None
         ctxs = None
-    cws = ctx.contextsfields_set.all().order_by('context', 'field')
+    fldids = ctx.contextsfields_set.filter(context_id=ctxid).values_list('field_id', flat=True)
+    flds = Fields.objects.filter(id__in=fldids)
     onts = gettrms()
 
     return render(request, "contexts/view.html",
-                  {'context': ctx, 'fields': cws, 'onts': onts, 'ctxs': ctxs, 'subids': subids})
+                  {'context': ctx, 'fields': flds, 'onts': onts, 'ctxs': ctxs, 'subids': subids})
 
 
 def add(request):
