@@ -10,12 +10,25 @@
                 <li>Short IRI: {{ nsiri }}</li>
                 <li>In Ontology: <a href="/onts/view/{{ term.ont.id }}">{{ term.ont.name }}</a></li>
             </ul>
-            <h4>Used in Contexts</h4>
-            <ul>
-                {% for fld in term.fields_set.all %}
-                    <li><a href="/contexts/view/{{ fld.context.id }}">{{ fld.context.name }}</a></li>
-                {% endfor %}
-            </ul>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-10 offset-md-1">
+            <div class="card mt-2">
+                <div class="card-header pt-1 pb-1">
+                    <div class="row">
+                        <div class="col-5">
+                            <h4>Used in Contexts</h4>
+                        </div>
+                        <div class="col-5 px-0">
+                            <input id="btnsrc" placeholder="Search terms (or scroll)" class="form-control form-control-sm float-right" data-search-override="true" type="text"/>
+                        </div>
+                    </div>
+                </div>
+                <div id="ctxs" class="card-body list-group list-group-flush panel-responsive-220 py-0 pr-0">
+                    {% for ctx in ctxs %}
+                        <a class="list-group-item items py-1" href="/contexts/view/{{ ctx.id }}">{{ ctx.title }}</a>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

@@ -2,14 +2,49 @@
 {% block title %} Field View {% endblock %}
 {% block content %}
     <div class="row">
-        <div class="col-12">
-            <h3>{{ field.field }} ({{ field.table }})</h3>
+        <div class="col-8 offset-1">
+            <h3>Field {{ field.name }}</h3>
             <ul>
-                <li>Dataset: {{ field.dataset.name }}</li>
-                <li>Term: {{ field.term.title }} </li>
-                <li>Definition: {{ field.term.definition }} </li>
-                <li>Ontology: {{ field.term.nspace.name }} </li>
+                <li>Category: {{ field.category }}</li>
+                <li>Term: <a href="/terms/view/{{ field.term.id }}">{{ field.term.title }}</a> ({{ field.term.definition }}}<br/>
+                    [From: {{ field.term.ont.name }}]
+                </li>
+                <li>Datatype: {{ field.datatype }}</li>
+                <li>@container: {{ field.container }}</li>
+                {% if field.comment %}
+                    <li>Comment: {{ field.comment }}</li>
+                {% endif %}
             </ul>
         </div>
+        <div class="col-2">
+            <select id="ctxadd" name="ctxadd" class="form-control">
+                <option value="" selected>Add to Context...</option>
+                {% for c in allctxs %}
+                    {
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-10 offset-1">
+            <div class="card mt-2">
+                <div class="card-header pt-1 pb-1">
+                    <div class="row">
+                        <div class="col-5">
+                            <h4>Used in Contexts</h4>
+                        </div>
+                        <div class="col-5 px-0">
+                            {% if ctxs|length > 10 %}
+                                <input id="btnsrc" placeholder="Search terms (or scroll)" class="form-control form-control-sm float-right" data-search-override="true" type="text"/>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div id="ctxs" class="card-body list-group list-group-flush panel-responsive-220 py-0 pr-0">
+                    {% for ctx in ctxs %}
+                        <a class="list-group-item items py-1" href="/contexts/view/{{ ctx.id }}">{{ ctx.title }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
     </div>
 {% endblock %}

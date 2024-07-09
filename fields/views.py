@@ -15,7 +15,13 @@ def index(request):
 def view(request, fldid):
     """view to show all data about a namespace"""
     field = getfld(fldid)
-    return render(request, "fields/view.html", {'field': field})
+    ctxs = field.contextsfields_set.all()
+    ctxlist = []
+    for ctx in ctxs:
+        ctxlist.append(ctx.id)
+    allctxs = Contexts.objects.all()
+    return render(request, "fields/view.html",
+                  {'field': field, 'ctxs': ctxs, 'allctxs': allctxs, 'ct'})
 
 
 @csrf_exempt
@@ -26,7 +32,7 @@ def add(request):
         ctxid = data['ctxid']
         fld = Fields()
         fld.name = data['name']
-        fld.term_id = data['term_id']
+        fld.term_ide = data['term_id']
         fld.category = data['category']
         fld.container = json.dumps(data['container'])
         fld.datatype = data['datatype']
