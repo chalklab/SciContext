@@ -25,8 +25,8 @@
                         <div class="row ps-2 pe-2 mb-3">
                             <select class="form-control" id="ontid" name="ontid" aria-label="Choose Ontology">
                                 <option value="">Choose Ontology...</option>
-                                {% for id, name in onts %}
-                                    <option value="{{ id }}">{{ name }}</option>
+                                {% for ont in onts %}
+                                    <option value="{{ ont.id }}">{{ ont.title }}</option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -43,28 +43,28 @@
             <div class="card mt-2">
                 <div class="card-header pt-1 pb-1">
                     <div class="row">
-                        <div class="col-4">
-                            <h4 class="mb-0">EBI-OLS Ontologies</h4>
-                        </div>
-                        <div class="col-4">
-                            <label for="listsrc"></label>
-                            <input id="listsrc" placeholder="Search terms (or scroll)" class="form-control form-control-sm float-right" data-search-override="true" type="text"/>
-                        </div>
-                        <div class="col-4">
-                            <label for="olsont"></label>
-                            <select id="olsont" class="form-control form-control-sm" name="nspace_id" aria-describedby="ns_spaces">
-                            <option value="">Show terms in ontology...</option>
-                            {% for  alias, title, url, home in onts %}
-                                <option value="{{ alias }}">{{ title }} ({{ alias }})</option>
-                            {% endfor %}
+                        <div class="col-3">
+                            <select id="svrsel" name="svrsel" class="form-control form-control-sm" aria-label="Choose Server...">
+                                <option value="" selected>Choose Server...</option>
+                                {% for svr in svrs %}
+                                    <option value="{{ svr.id }}">{{ svr.name }}</option>
+                                {% endfor %}
                             </select>
+                        </div>
+                        <div class="col-3">
+                            <select id="ontsel" name="ontsel" class="form-control form-control-sm" disabled aria-label="Choose Ontology...">
+                                <option value="">Choose Ontology...</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <input id="listsrc" placeholder="Search terms (or scroll)" class="form-control form-control-sm float-end" type="text" aria-label="Search terms..."/>
                         </div>
                     </div>
                 </div>
                 <div id="terms" class="card-body panel-responsive-220">
-                    
+
                 </div>
             </div>
         </div>
     </div>
-    {% endblock %}
+{% endblock %}

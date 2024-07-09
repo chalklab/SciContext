@@ -3,6 +3,8 @@ from django.shortcuts import render, redirect
 from config.functions import *
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
+import urllib.request
+import json
 
 
 def index(request):
@@ -62,3 +64,17 @@ def ontupd(request, svrid, ontid):
     # load DB with list of terms in an ontology (from a specific server)
     ontload(svrid, ontid)
     return redirect('/onts/view/' + str(ontid))
+
+
+@csrf_exempt
+def bysvr(request, svrid):
+    # get a list of ontologies on a server
+    svr = Servers.objects.get(id=svrid)
+    with urllib.request.urlopen(svr.apiurl + 'ontologies?size=300') as url:
+        data = json.loads(url.read().decode())
+    onts = data['_embedded']['ontologies']
+    ontlist = []
+    for ont in onts:
+        meta = ont['config']
+        ontlist.append({"ns": meta['namespace'], "title": meta['title']})
+    return JsonResponse(ontlist, safe=False, status=200)

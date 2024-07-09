@@ -1,4 +1,31 @@
 $(document).ready(function() {
+    $('#svrsel').on('change', function() {
+        // populate the ontsel select with ontologies from the chosen server
+        let svrid = $('#svrsel option:selected').val();
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            context: document.body,
+            url: 'http://127.0.0.1:8001/onts/bysvr/' + svrid,
+            success: function (data) {
+                let cnt = data.length;
+                let sel = $("#ontsel");
+                for(let i = 0; i<cnt; i++) {
+                    let ont = data[i];
+                    let ostr = '<option value="' + ont['ns'] + '">' + ont['title'] + '</option>'
+                    sel.append(ostr);
+                }
+                sel.prop("disabled", false);
+                return false;
+                },
+            error: function () {
+                alert("Error");
+                return false;
+            }
+        });
+    });
+
+
     $('#alias').on('blur', function() {
         // for form in template onts/add.html
         let input = $('#alias');
@@ -180,16 +207,15 @@ $(document).ready(function() {
     // edit a field entry
     $(".editfld").on('click', function () {
         let fld = $(this);
-        let fldid = fld.attr('fldid');
+        let fldid = fld.attr('data-fldid');
         $.get('/fields/read/' + fldid, function( fdata ) {
-            let form = $('#modalform');
-            form.attr("fldid",fldid);
-            form.attr("cxtid",fdata.context);
-            $('#table').val(fdata.table).attr('old',fdata.table);
-            $('#field').val(fdata.field).attr('old',fdata.field);
-            $('#term_id').val(fdata.term);
-            $('#category').val(fdata.category).attr('old',fdata.category);
-            $('#datatype').val(fdata.datatype);
+            let form = $('#fieldform');
+            $('#name').val(fdata.name).data('old',fdata.name);
+            $('#term_id').val(fdata.term_id).data('old',fdata.term_id);
+            $('#category').val(fdata.category).data('old',fdata.category);
+            $('#datatype').val(fdata.datatype).data('old',fdata.datatype);
+            $('#container').val(fdata.container).data('old',fdata.container);
+            $('#fldmodal').show()
             return false;
         });
     });

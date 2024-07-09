@@ -23,6 +23,8 @@ def getctxs():
 
 def lstctxs(idlist):
     """get a list of contexts"""
+    if idlist[0] == '' and len(idlist) == 1:
+        idlist = None
     if idlist:
         clist = Contexts.objects.filter(id__in=idlist).values_list('id', 'name').order_by('name')
     else:

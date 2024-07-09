@@ -3,25 +3,27 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from config.functions import *
 from datetime import datetime
+from django.http import JsonResponse
 import json
 
 
 def index(request):
     """view to generate list of namespaces"""
-    fields = getflds()
-    return render(request, "fields/index.html", {'fields': fields})
+    flds = getflds()
+    return render(request, "fields/index.html", {'flds': flds})
 
 
 def view(request, fldid):
     """view to show all data about a namespace"""
     field = getfld(fldid)
-    ctxs = field.contextsfields_set.all()
+    ctxids = field.contextsfields_set.all().values_list('context_id', flat=True)
+    ctxs = Contexts.objects.filter(id__in=ctxids)
     ctxlist = []
     for ctx in ctxs:
         ctxlist.append(ctx.id)
     allctxs = Contexts.objects.all()
     return render(request, "fields/view.html",
-                  {'field': field, 'ctxs': ctxs, 'allctxs': allctxs, 'ct'})
+                  {'field': field, 'ctxs': ctxs, 'allctxs': allctxs, 'ctxlist': ctxlist})
 
 
 @csrf_exempt
@@ -32,7 +34,7 @@ def add(request):
         ctxid = data['ctxid']
         fld = Fields()
         fld.name = data['name']
-        fld.term_ide = data['term_id']
+        fld.term_id = data['term_id']
         fld.category = data['category']
         fld.container = json.dumps(data['container'])
         fld.datatype = data['datatype']
@@ -45,7 +47,22 @@ def add(request):
             cf.field_id = fld.id
             cf.updated = datetime.now()
             cf.save()
-        return redirect('/fields/view/' + str(fld.id))
+            return redirect('/contexts/view/' + str(ctxid))
+        else:
+            return redirect('/fields/view/' + str(fld.id))
 
     trms = Terms.objects.all()
     return render(request, "fields/add.html", {'trms': trms})
+
+
+@csrf_exempt
+def read(request, fldid):
+    """TODO: field updating in the context view page"""
+    field = getfld(fldid)
+    output = {}
+    output.update({"name": field.name})
+    output.update({"category": field.category})
+    output.update({"datatype": field.datatype})
+    output.update({"term_id": field.term_id})
+    output.update({"container": json.loads(field.container)})
+    return JsonResponse(output, safe=False, status=200)

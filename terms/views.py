@@ -1,5 +1,6 @@
 """ terms view file """
 from django.shortcuts import render, redirect
+from django.views.decorators.csrf import csrf_exempt
 from config.functions import *
 
 
@@ -14,7 +15,8 @@ def view(request, trmid):
     """view to show all data about an ont term"""
     term = gettrm(trmid)
     nsiri = term.ont.ns + ':' + term.code
-    return render(request, "terms/view.html", {'term': term, 'nsiri': nsiri})
+    flds = term.fields_set.all()
+    return render(request, "terms/view.html", {'term': term, 'nsiri': nsiri, 'flds': flds})
 
 
 def add(request):
@@ -32,6 +34,7 @@ def add(request):
         term.save()
         return redirect('/terms/')
 
+    svrs = Servers.objects.all()
     onts = Onts.objects.all().values_list('id', 'name').order_by('name')
     aliases = ontaliases()
     kept = []
@@ -40,4 +43,9 @@ def add(request):
         if ont[0] in aliases:
             kept.append(ont)
     return render(request, "terms/add.html",
-                  {'onts': onts, 'kept': kept, 'aliases': aliases})
+                  {'onts': onts, 'kept': kept, 'aliases': aliases, 'svrs': svrs})
+
+
+@csrf_exempt
+def byont(request, ontid):
+    return redirect('/terms/')

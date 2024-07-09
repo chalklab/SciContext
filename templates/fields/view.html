@@ -17,10 +17,10 @@
             </ul>
         </div>
         <div class="col-2">
-            <select id="ctxadd" name="ctxadd" class="form-control">
+            <select id="ctxadd" name="ctxadd" class="form-control" aria-label="Add field to Context">
                 <option value="" selected>Add to Context...</option>
                 {% for c in allctxs %}
-                    {
+                    <option value="{{ c.id }}" {% if c.id in ctxlist %} disabled{% endif %}>{{ c.name }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -33,18 +33,17 @@
                         </div>
                         <div class="col-5 px-0">
                             {% if ctxs|length > 10 %}
-                                <input id="btnsrc" placeholder="Search terms (or scroll)" class="form-control form-control-sm float-right" data-search-override="true" type="text"/>
+                                <input id="btnsrc" placeholder="Search terms (or scroll)" class="form-control form-control-sm float-right" aria-label="Search terms" data-search-override="true" type="text"/>
                             {% endif %}
                         </div>
                     </div>
                 </div>
                 <div id="ctxs" class="card-body list-group list-group-flush panel-responsive-220 py-0 pr-0">
                     {% for ctx in ctxs %}
-                        <a class="list-group-item items py-1" href="/contexts/view/{{ ctx.id }}">{{ ctx.title }}</a>
+                        <a class="list-group-item items py-1" href="/contexts/view/{{ ctx.id }}">{{ ctx.name }}</a>
                     {% endfor %}
                 </div>
             </div>
         </div>
-
     </div>
 {% endblock %}

@@ -7,4 +7,5 @@ urlpatterns = [
     path("", views.index, name='Term index'),
     path("add/", views.add, name='Add term'),
     path("view/<trmid>", views.view, name='Term view'),
+    path("byont/<svrid>", views.byont, name='Term view'),
 ]

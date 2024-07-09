@@ -41,12 +41,12 @@
                 <div class="card-body list-group list-group-flush panel-responsive-320 py-0 pr-0">
                 <div id="flds" class="row">
                     {% for fld in fields %}
-                        <div class="col-11 pr-0">
-                            <a id="fld{{ fld.id }}" class="editfld list-group-item items py-1" data-fldid="{{ fld.id }}" data-toggle="modal" data-target="#fldmodal" style="cursor: pointer;">
-                                <b>{{ fld.table }}:{{ fld.field }} -></b> {% if fld.newname %}
-                                {{ fld.newname }} {% else %} {{ fld.field }} {% endif %} ({{ fld.datatype }})
-                                means <em>{{ fld.term.title }}</em> [{{ fld.term.url }}]
-                            </a>
+                        <div class="col-9 pr-0">
+                            <a id="fld{{ fld.id }}" class="editfld list-group-item items py-1" data-fldid="{{ fld.id }}" style="cursor: pointer;">
+                                <b>{{ fld.name }} -></b> ({{ fld.datatype }}) means <em>{{ fld.term.title }}</em> [{{ fld.term.ont.ns }}:{{ fld.term.code }}]</a>
+                        </div>
+                        <div class="col-2 pr-0 mt-1">
+                            <a href="/terms/view/{{ fld.term.id }}">TERM</a>, <a href="/onts/view/{{ fld.term.ont.id }}">ONT</a>
                         </div>
                         <div class="col-1 pl-0">
                             <button class="btn btn-sm btn-danger delfld col-12" data-fldid="{{ fld.id }}" title="Delete">X</button>

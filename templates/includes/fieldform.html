@@ -1,7 +1,7 @@
 {% block form %}
     <form id="fieldform" action="/fields/add/" method="post">
         <div class="container-fluid">
-            <input id="ctxid" name="ctxid" type="hidden" value=""/>
+            <input id="ctxid" name="ctxid" type="hidden" value="{{ context.id }}"/>
             <div class="input-group row mb-2">
                 <label for="name" class="input-group-text col-3" title="JSON-LD field name (required)">JSON-LD field name*</label>
                 <input id="name" name="name" type="text" data-old="" class="form-control col-9"/>
