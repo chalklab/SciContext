@@ -1,27 +1,28 @@
 {% block form %}
-    <form id="fieldform" data-fldid="" data-ctxid="">
+    <form id="fieldform" action="/fields/add/" method="post">
         <div class="container-fluid">
+            <input id="ctxid" name="ctxid" type="hidden" value=""/>
             <div class="input-group row mb-2">
-                <label for="field" class="input-group-text col-3" title="JSON-LD field name (required)">JSON-LD field name*</label>
-                <input type="text" data-old="" class="form-control col-9 updfld" id="field"/>
+                <label for="name" class="input-group-text col-3" title="JSON-LD field name (required)">JSON-LD field name*</label>
+                <input id="name" name="name" type="text" data-old="" class="form-control col-9"/>
             </div>
             <div class="input-group row mb-2">
                 <label for="term_id" class="input-group-text col-3" title="Ontology term (required)">Ontology term*</label>
-                <select class="form-control col-9 updtrm" id="term_id">
-                    <option value="">Choose...</option>
-                    {% for ont in onts %}
-                        <option value="{{ ont.id }}">{{ ont.title }}</option>
+                <select id="term_id" name="term_id" class="form-control col-9">
+                    <option value="" selected>Choose...</option>
+                    {% for trm in trms %}
+                        <option value="{{ trm.id }}">{{ trm.title }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="input-group row mb-2">
                 <label for="category" class="input-group-text col-3" title="Metadata category (optional)">Metadata category</label>
-                <input type="text" data-old="" class="form-control col-9 updfld" id="category"/>
+                <input id="category" name="category" type="text" data-old="" class="form-control col-9"/>
             </div>
             <div class="input-group row mb-2">
-                <label for="container" class="input-group-text col-3" title="@container (optional)">@container</label>
-                <select multiple size="3" class="form-control col-9 updfld" id="container">
-                    <option value="">Choose...</option>
+                <label for="container" class="input-group-text col-3" title="@container (optional)">@container<br>(multiselect)</label>
+                <select id="container" name="container" multiple size="3" class="form-control col-9">
+                    <option value="" selected>Choose...</option>
                     <option value="graph">@graph</option>
                     <option value="id">@id</option>
                     <option value="index">@index</option>
@@ -33,8 +34,8 @@
             </div>
             <div class="input-group row mb-2">
                 <label for="datatype" class="input-group-text col-3">Datatype*</label>
-                <select class="form-control col-9 updfld" id="datatype">
-                    <option value="">Choose XSD Datatype...</option>
+                <select id="datatype" name="datatype" class="form-control col-9">
+                    <option value="" selected>Choose XSD Datatype...</option>
                     <option value="string">String (most common)</option>
                     <option value="dateTime">Date/Time</option>
                     <option value="decimal">Decimal</option>
@@ -45,6 +46,11 @@
                     <option value="anyURI">URI</option>
                     <option value="@id">@id</option>
                 </select>
+            </div>
+            <div class="form-group mt-2">
+                <div class="float-end">
+                    <input type="submit" value="Add"/>
+                </div>
             </div>
         </div>
     </form>

@@ -27,10 +27,10 @@ def view(request, ctxid):
         ctxs = None
     fldids = ctx.contextsfields_set.filter(context_id=ctxid).values_list('field_id', flat=True)
     flds = Fields.objects.filter(id__in=fldids)
-    onts = gettrms()
+    trms = gettrms()
 
     return render(request, "contexts/view.html",
-                  {'context': ctx, 'fields': flds, 'onts': onts, 'ctxs': ctxs, 'subids': subids})
+                  {'context': ctx, 'fields': flds, 'trms': trms, 'ctxs': ctxs, 'subids': subids})
 
 
 def add(request):

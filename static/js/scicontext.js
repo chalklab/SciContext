@@ -90,68 +90,34 @@ $(document).ready(function() {
         clone.insertAfter("div." + type + ":last");
     });
 
-    // add/update a new field entry...
+    // Remove: save field data in form before adding a new field ...
     $(".updfld").on('change', function () {
         let input = $(this);
-        let field = input.attr('id');
+        let name = $('#name').val();
+        let trmid = $('#term_id').find(":selected").text();
+        let cat = $('#category').val();
+        let con = $('#container').find(":selected").text();
+        let type = $('#type').find(":selected").text();
+
         let form = input.closest('form');
         let fldid = form.attr('data-fldid')
         let ctxid = form.attr('data-ctxid')
-        let value = input.val();
-        // if dbid is empty create new entry in fields table
-        let url = '/fields/add/';
-        $.ajax({
-            type: 'POST',
-            dataType: "json",
-            context: document.body,
-            url: url,
-            data: {fldid: fldid, cxtid: ctxid, field: field, value: value},
-            success: function (resp) {
-                // note term title and url put in temp field (title|url)
-                let html = '<b>' + resp.field + ' -> </b>';
-                if(resp.newname) {
-                    html += ' ' + resp.newname;
-                } else {
-                    html += ' ' + resp.field;
-                }
-                html += ' (' + resp.datatype + ')';
-                if(resp.temp) {
-                    let temp = resp.temp.split('|');
-                    html += ' means <em>' + temp[0] + '</em> [' + temp[1] + ']';
-                }
-                if(!fldid) {
-                    // set the field id if it was not set (new entry)
-                    $('#modalform').attr("fldid",resp.id);
-                    // add the new entry to the page
-                    let newitem = '<div class="col-11 pr-0">';
-                    newitem += '<a id="fld' + resp.id + '" class="editfld list-group-item items py-1" data-fldid="' + resp.id + '" data-toggle="modal" data-target="#fldmodal" style="cursor: pointer;">' + html + '</a>';
-                    newitem += '</div><div class="col-1 pl-0">';
-                    newitem += '<button class="btn btn-sm btn-danger delcwk col-12" data-fldid="' + resp.id + '" title="Delete">X</button>'
-                    newitem += '</div>';
-                    $("#flds").append(newitem);
-                } else {
-                    $('#fld' + fldid).html(html);
-                }
-                return false;
-            },
-            error: function () {
-                alert("Error");
-                return false;
-            }
-        });
+        let saved = form.attr('data-saved');
+        saved = {"name": name, "trmid": trmid, "cat": cat, "con": con, "type": type};
+        form.data('saved', saved);
         return false;
     });
 
     // remove a field entry
     $(".delfld").on('click', function () {
-        let cwk = $(this);
-        let cwkid = cwk.attr('cwkid');
-        $.post('/xwalks/delete/', {cwkid: cwkid})
+        let fld = $(this);
+        let fldid = fld.attr('fldid');
+        $.post('/fields/delete/', {fld: fldid})
             .done(function ( data ) {
                 // hide dom elements
                 if(data['response']==='success') {
-                    $(".editcwk[cwkid='" + cwkid + "']").hide();
-                    $(".delcwk[cwkid='" + cwkid + "']").hide();
+                    $(".editfld[fldid='" + fldid + "']").hide();
+                    $(".delfld[fldid='" + fldid + "']").hide();
                     alert("Field deleted :)");
                 } else {
                     alert("Deletion error :(");
@@ -229,7 +195,7 @@ $(document).ready(function() {
     });
 
     // focus modal to first input field on open
-    $('#cwkmodal').on('shown.bs.modal', function () {
+    $('#fldmodal').on('shown.bs.modal', function () {
         $('#table').trigger('focus')
     });
 

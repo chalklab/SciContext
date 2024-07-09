@@ -1,9 +1,9 @@
 """ fields view file """
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
 from config.functions import *
 from datetime import datetime
+import json
 
 
 def index(request):
@@ -20,26 +20,26 @@ def view(request, fldid):
 
 @csrf_exempt
 def add(request):
-    """view to add data about a field"""
+    # save new field
     if request.method == "POST":
-        # save new field
         data = request.POST
-        cwkid = data['cwkid']
-        cxtid = data['cxtid']
+        ctxid = data['ctxid']
         fld = Fields()
         fld.name = data['name']
-        fld.description = data['description']
-        fld.filename = data['filename']
+        fld.term_id = data['term_id']
+        fld.category = data['category']
+        fld.container = json.dumps(data['container'])
+        fld.datatype = data['datatype']
         fld.updated = datetime.now()
         fld.save()
-        status = "success"
-        if not fld.id:
-            status = "error"
-            fld.id = None
-        # TODO: save field entries that have not been saved?
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return JsonResponse({'status': status, 'fldid': fld.id})
-        else:
-            return redirect('/fields/view/' + str(fld.id))
-    else:
-        return render(request, "fields/add.html")
+        if ctxid != "":
+            # save join table entry
+            cf = ContextsFields()
+            cf.context_id = ctxid
+            cf.field_id = fld.id
+            cf.updated = datetime.now()
+            cf.save()
+        return redirect('/fields/view/' + str(fld.id))
+
+    trms = Terms.objects.all()
+    return render(request, "fields/add.html", {'trms': trms})

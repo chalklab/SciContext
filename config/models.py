@@ -110,7 +110,6 @@ class Fields(models.Model):
     datatype = models.CharField(max_length=8)
     container = models.CharField(max_length=64, blank=True, null=True)
     category = models.CharField(max_length=64, blank=True, null=True)
-    newname = models.CharField(max_length=64, blank=True, null=True)
     comments = models.CharField(max_length=128, blank=True, null=True)
     updated = models.DateTimeField()
 
