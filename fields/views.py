@@ -26,6 +26,33 @@ def view(request, fldid):
                   {'field': field, 'ctxs': ctxs, 'allctxs': allctxs, 'ctxlist': ctxlist})
 
 
+def edit(request, fldid):
+    # edit field
+    if request.method == "POST":
+        data = request.POST
+        ctxid = data['ctxid']
+        fld = Fields.objects.get(id=fldid)
+        fld.name = data['name']
+        fld.term_id = data['term_id']
+        fld.category = data['category']
+        fld.container = json.dumps(data['container'])
+        fld.datatype = data['datatype']
+        fld.updated = datetime.now()
+        fld.save()
+        return redirect('/fields/view/' + fldid)
+
+    # send data to view
+    field = getfld(fldid)
+    ctxids = field.contextsfields_set.all().values_list('context_id', flat=True)
+    ctxs = Contexts.objects.filter(id__in=ctxids)
+    ctxlist = []
+    for ctx in ctxs:
+        ctxlist.append(ctx.id)
+    allctxs = Contexts.objects.all()
+    return render(request, "fields/view.html",
+                  {'field': field, 'ctxs': ctxs, 'allctxs': allctxs, 'ctxlist': ctxlist})
+
+
 @csrf_exempt
 def add(request):
     # save new field
@@ -36,7 +63,7 @@ def add(request):
         fld.name = data['name']
         fld.term_id = data['term_id']
         fld.category = data['category']
-        fld.container = json.dumps(data['container'])
+        fld.container = data['container']
         fld.datatype = data['datatype']
         fld.updated = datetime.now()
         fld.save()

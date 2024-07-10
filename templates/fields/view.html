@@ -3,7 +3,8 @@
 {% block content %}
     <div class="row">
         <div class="col-8 offset-1">
-            <h3>Field {{ field.name }}</h3>
+            <h3 class="float-start">Field {{ field.name }}</h3>
+            <a title="Edit" class="float-start mt-2 mx-1" href="/field/edit/{{ field.id }}">Edit</a><br/><br/>
             <ul>
                 <li>Category: {{ field.category }}</li>
                 <li>Term: <a href="/terms/view/{{ field.term.id }}">{{ field.term.title }}</a> ({{ field.term.definition }}}<br/>

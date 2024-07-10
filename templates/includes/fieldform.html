@@ -4,14 +4,14 @@
             <input id="ctxid" name="ctxid" type="hidden" value="{{ context.id }}"/>
             <div class="input-group row mb-2">
                 <label for="name" class="input-group-text col-3" title="JSON-LD field name (required)">JSON-LD field name*</label>
-                <input id="name" name="name" type="text" data-old="" class="form-control col-9"/>
+                <input id="name" name="name" type="text" data-old="" value="{{ fld.name }}" class="form-control col-9"/>
             </div>
             <div class="input-group row mb-2">
                 <label for="term_id" class="input-group-text col-3" title="Ontology term (required)">Ontology term*</label>
                 <select id="term_id" name="term_id" class="form-control col-9">
                     <option value="" selected>Choose...</option>
                     {% for trm in trms %}
-                        <option value="{{ trm.id }}">{{ trm.title }}</option>
+                        <option value="{{ trm.id }}" {% if trm.id == fld.term_id %} selected{% endif %}>{{ trm.title }}</option>
                     {% endfor %}
                 </select>
             </div>

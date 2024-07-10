@@ -40,7 +40,7 @@ def add(request):
         s.apikey = data['apikey']
         s.headers = data['headers']
         s.type = data['type']
-        s.updated = datetime.datetime.now()
+        s.updated = datetime.now()
         s.save()
         return redirect('/servers/')
 

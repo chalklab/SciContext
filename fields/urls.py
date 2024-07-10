@@ -8,4 +8,5 @@ urlpatterns = [
     path("add/", views.add, name='Add field'),
     path("view/<fldid>", views.view, name='Field view'),
     path("read/<fldid>", views.read, name='Read field data'),
+    path("edit/<fldid>", views.read, name='Read field data'),
 ]

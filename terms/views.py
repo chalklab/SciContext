@@ -2,6 +2,9 @@
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from config.functions import *
+from django.http import JsonResponse
+import urllib.request
+import json
 
 
 # Create your views here.
@@ -35,17 +38,34 @@ def add(request):
         return redirect('/terms/')
 
     svrs = Servers.objects.all()
-    onts = Onts.objects.all().values_list('id', 'name').order_by('name')
-    aliases = ontaliases()
-    kept = []
-    # remove entries that are not in the namespace list
-    for i, ont in enumerate(onts):
-        if ont[0] in aliases:
-            kept.append(ont)
-    return render(request, "terms/add.html",
-                  {'onts': onts, 'kept': kept, 'aliases': aliases, 'svrs': svrs})
+    return render(request, "terms/add.html", {'svrs': svrs})
 
 
 @csrf_exempt
-def byont(request, ontid):
-    return redirect('/terms/')
+def byont(request, svrid, ontid):
+    svr = Servers.objects.get(id=svrid)
+    with urllib.request.urlopen(svr.apiurl + 'ontologies/' + ontid + '/terms?size=500') as url:
+        data = json.loads(url.read().decode())
+    terms = data['_embedded']['terms']
+    tlist = []
+    for term in terms:
+        tlist.append({"label": term['label'], "code": term['short_form']})
+    return JsonResponse(tlist, safe=False, status=200)
+
+
+@csrf_exempt
+def trmsrc(request, svrid, srcstr):
+    svr = Servers.objects.get(id=svrid)
+    with urllib.request.urlopen(svr.apiurl + 'search?q=' + srcstr + '&lang=en') as url:
+        data = json.loads(url.read().decode())
+    terms = data['response']['docs']
+    # return JsonResponse(terms, safe=False, status=200)
+    tlist = []
+    for term in terms:
+        if len(term['description']) == 0:
+            desc = "Not available"
+        else:
+            tmp = term['description']
+            desc = tmp[0]
+        tlist.append({"code": term['short_form'], "label": term['label'], 'desc': desc})
+    return JsonResponse(tlist, safe=False, status=200)

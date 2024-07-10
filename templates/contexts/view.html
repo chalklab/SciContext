@@ -42,7 +42,7 @@
                 <div id="flds" class="row">
                     {% for fld in fields %}
                         <div class="col-9 pr-0">
-                            <a id="fld{{ fld.id }}" class="editfld list-group-item items py-1" data-fldid="{{ fld.id }}" style="cursor: pointer;">
+                            <a id="fld{{ fld.id }}" href="/fields/view/{{ fld.id }}" class="list-group-item items py-1" data-fldid="{{ fld.id }}" style="cursor: pointer;">
                                 <b>{{ fld.name }} -></b> ({{ fld.datatype }}) means <em>{{ fld.term.title }}</em> [{{ fld.term.ont.ns }}:{{ fld.term.code }}]</a>
                         </div>
                         <div class="col-2 pr-0 mt-1">

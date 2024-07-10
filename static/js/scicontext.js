@@ -1,6 +1,6 @@
 $(document).ready(function() {
+    // populate the ontsel select with ontologies from the chosen server
     $('#svrsel').on('change', function() {
-        // populate the ontsel select with ontologies from the chosen server
         let svrid = $('#svrsel option:selected').val();
         $.ajax({
             type: 'POST',
@@ -12,10 +12,11 @@ $(document).ready(function() {
                 let sel = $("#ontsel");
                 for(let i = 0; i<cnt; i++) {
                     let ont = data[i];
-                    let ostr = '<option value="' + ont['ns'] + '">' + ont['title'] + '</option>'
+                    let ostr = '<option value="' + ont['ns'] + '">' + ont['title'] + ' (' + ont['count'] + ')</option>'
                     sel.append(ostr);
                 }
                 sel.prop("disabled", false);
+                $("#listsrc").prop("disabled", false);
                 return false;
                 },
             error: function () {
@@ -25,6 +26,32 @@ $(document).ready(function() {
         });
     });
 
+    // populate the terms div with terms from the chosen ontologoy
+    $('#ontsel').on('change', function() {
+        // NOTE: ontid here is the ontology namespace, not a DB id as the request is done on the server
+        let ontid = $('#ontsel option:selected').val();
+        let svrid = $('#svrsel option:selected').val();
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            context: document.body,
+            url: 'http://127.0.0.1:8001/terms/byont/' + svrid + '/' + ontid,
+            success: function (data) {
+                let cnt = data.length;
+                let div = $("#terms");
+                for(let i = 0; i<cnt; i++) {
+                    let trm = data[i];
+                    let btn = '<input class="btn btn-sm btn-success item m-1" data-svrid="' + svrid + '" data-code="' + trm['code'] + '" data-content="' + trm['label'] + '" type="button" title="' + trm['label'] + '" value="' + trm['label'] + '">'
+                    div.append(btn);
+                }
+                return false;
+                },
+            error: function () {
+                alert("Error");
+                return false;
+            }
+        });
+    });
 
     $('#alias').on('blur', function() {
         // for form in template onts/add.html
@@ -151,6 +178,34 @@ $(document).ready(function() {
                 }
             });
         return false;
+    });
+
+    // search and show/hide terms in card
+    $("#trmsrc").on('click',function(){
+        let srcstr = $('#listsrc').val();
+        let svrid = $('#svrsel option:selected').val();
+        let div = $("#terms");
+        div.empty();  // remove previous search results
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            context: document.body,
+            url: 'http://127.0.0.1:8001/terms/trmsrc/' + svrid + '/' + srcstr,
+            success: function (data) {
+                let cnt = data.length;
+                alert(cnt)
+                for(let i = 0; i<cnt; i++) {
+                    let trm = data[i];
+                    let li = '<li class="list-group-item item" data-svrid="' + svrid + '" data-code="' + trm['code'] + '" data-content="' + trm['label'] + '" title="' + trm['label'] + '>' + trm['label'] + '</li>'
+                    div.append(li);
+                }
+                return false;
+                },
+            error: function () {
+                alert("Error");
+                return false;
+            }
+        });
     });
 
     // search and show/hide terms in card
