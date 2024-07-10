@@ -43,3 +43,7 @@
 .emph_red {
     color: darkred;
 }
+
+.item-sm {
+    padding: 4px 8px;
+}

@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
 from config.functions import *
 from django.http import JsonResponse
+from datetime import datetime
 import urllib.request
 import json
 
@@ -25,15 +26,16 @@ def view(request, trmid):
 def add(request):
     """add a term or create a page so a user can do that"""
     if request.method == "POST":
-        # save new namespace
+        # save new term
         data = request.POST
         term = Terms()
         term.title = data['title']
         term.definition = data['definition']
         term.code = data['code']
-        term.ontid = data['nsid']
-        ont = Onts.objects.get(id=data['nsid'])
-        term.url = ont.ns + ':' + data['code']
+        ont = Onts.objects.get(ns=data['ns'], server_id=data['svrid'])  # ns is the text code for the ontology
+        term.ont_id = ont.id
+        term.iri = ont.path + ':' + data['code']
+        term.updated = datetime.now()
         term.save()
         return redirect('/terms/')
 
@@ -56,16 +58,29 @@ def byont(request, svrid, ontid):
 @csrf_exempt
 def trmsrc(request, svrid, srcstr):
     svr = Servers.objects.get(id=svrid)
-    with urllib.request.urlopen(svr.apiurl + 'search?q=' + srcstr + '&lang=en') as url:
+    with urllib.request.urlopen(svr.apiurl + 'search?q=' + srcstr + '&rows=1000&lang=en') as url:
         data = json.loads(url.read().decode())
     terms = data['response']['docs']
     # return JsonResponse(terms, safe=False, status=200)
-    tlist = []
+    tlist = {}
     for term in terms:
+        # ignore duplicates using the term code
+        if 'short_form' not in term.keys():
+            continue
+        if term['short_form'] in tlist.keys():
+            continue
         if len(term['description']) == 0:
             desc = "Not available"
         else:
             tmp = term['description']
             desc = tmp[0]
-        tlist.append({"code": term['short_form'], "label": term['label'], 'desc': desc})
-    return JsonResponse(tlist, safe=False, status=200)
+        tlist.update({term['short_form']: {"title": term['label'], 'defn': desc, 'ns': term['ontology_name']}})
+    # generate output list of dictionaries
+    output = []
+    for key, value in tlist.items():
+        # add the ontology ID in the database
+        ont = Onts.objects.get(ns=value['ns'], server_id=svr.id)
+        output.append({"code": key, "title": value['title'], "defn": value['defn'], "ns": value['ns'], "ontid": ont.id})
+    # sort
+    out2 = sorted(output, key=lambda d: d['title'])
+    return JsonResponse(out2, safe=False, status=200)

@@ -2,6 +2,9 @@ $(document).ready(function() {
     // populate the ontsel select with ontologies from the chosen server
     $('#svrsel').on('change', function() {
         let svrid = $('#svrsel option:selected').val();
+        let spin = $('#spinner')
+        let sel = $("#trm_ont");
+        spin.show();
         $.ajax({
             type: 'POST',
             dataType: "json",
@@ -9,7 +12,6 @@ $(document).ready(function() {
             url: 'http://127.0.0.1:8001/onts/bysvr/' + svrid,
             success: function (data) {
                 let cnt = data.length;
-                let sel = $("#ontsel");
                 for(let i = 0; i<cnt; i++) {
                     let ont = data[i];
                     let ostr = '<option value="' + ont['ns'] + '">' + ont['title'] + ' (' + ont['count'] + ')</option>'
@@ -17,6 +19,7 @@ $(document).ready(function() {
                 }
                 sel.prop("disabled", false);
                 $("#listsrc").prop("disabled", false);
+                spin.hide();
                 return false;
                 },
             error: function () {
@@ -185,7 +188,9 @@ $(document).ready(function() {
         let srcstr = $('#listsrc').val();
         let svrid = $('#svrsel option:selected').val();
         let div = $("#terms");
+        let spin = $('#spinner')
         div.empty();  // remove previous search results
+        spin.show();
         $.ajax({
             type: 'POST',
             dataType: "json",
@@ -193,12 +198,15 @@ $(document).ready(function() {
             url: 'http://127.0.0.1:8001/terms/trmsrc/' + svrid + '/' + srcstr,
             success: function (data) {
                 let cnt = data.length;
-                alert(cnt)
                 for(let i = 0; i<cnt; i++) {
                     let trm = data[i];
-                    let li = '<li class="list-group-item item" data-svrid="' + svrid + '" data-code="' + trm['code'] + '" data-content="' + trm['label'] + '" title="' + trm['label'] + '>' + trm['label'] + '</li>'
-                    div.append(li);
+                    let hit = '<a class="list-group-item item item-sm addtrm" data-svrid="' + svrid + '" data-code="' +
+                        trm['code'] + '" data-title="' + trm['title'] + '" data-ns="' + trm['ns'] + '" data-defn="' +
+                        trm['defn'] + '" data-ontid="' + trm['ontid'] + '" style="cursor: pointer;">['
+                        + trm['code'] + '] ' + trm['title'] + ': <em>' + trm['defn'] + '</em></a>'
+                    div.append(hit);
                 }
+                spin.hide();
                 return false;
                 },
             error: function () {
@@ -206,6 +214,25 @@ $(document).ready(function() {
                 return false;
             }
         });
+    });
+
+    // update the new term form with data from the server search
+    $(document.body).on('click', '.addtrm', function(){
+        // must use documentbody and 'selector' above as the <a> tags have been dynamically added to the DOM
+        let trm = $(this);
+        let code = trm.data('code');
+        let title = trm.data('title');
+        let defn = trm.data('defn');
+        let ns = trm.data('ns');
+        let ontid = trm.data('ontid');
+        let svrid = $('#svrsel option:selected').val();
+        $('#trm_title').val(title);
+        $('#trm_defn').val(defn);
+        $('#trm_code').val(code);
+        $('#svrid').val(svrid);
+        $('#ontid').val(ontid);
+        $('#trm_ont option[value="' + ns + '"]').prop('selected', true);
+        return false;
     });
 
     // search and show/hide terms in card

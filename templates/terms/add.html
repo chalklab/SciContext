@@ -13,17 +13,19 @@
                 <div id="form" class="card-body panel-responsive-220">
                     <form id="addform" action="/terms/add/" method="post">
                         {% csrf_token %}
+                        <input id="svrid" name="svrid" type="hidden" value="" aria-label="Server ID">
+                        <input id="ontid" name="ontid" type="hidden" value="" aria-label="Ontology ID">
                         <div class="row ps-2 pe-2 mb-3">
-                            <input type="text" class="form-control" id="ns_title" name="title" placeholder="Title" value="" aria-label="Title" />
+                            <input type="text" class="form-control" id="trm_title" name="title" placeholder="Term" value="" aria-label="Term"/>
                         </div>
                         <div class="row ps-2 pe-2 mb-3">
-                            <input type="text" class="form-control" id="ns_defn" name="definition" placeholder="Definition" value="" aria-label="Definition"/>
+                            <input type="text" class="form-control" id="trm_defn" name="definition" placeholder="Definition" value="" aria-label="Definition"/>
                         </div>
                         <div class="row ps-2 pe-2 mb-3">
-                            <input type="text" class="form-control" id="ns_code" name="code" placeholder="Term Code" value="" aria-label="Term Code"/>
+                            <input type="text" class="form-control" id="trm_code" name="code" placeholder="Term Code" value="" aria-label="Term Code"/>
                         </div>
                         <div class="row ps-2 pe-2 mb-3">
-                            <select class="form-control" id="ontsel" name="ontsel" disabled aria-label="Choose Ontology">
+                            <select class="form-control" id="trm_ont" name="ns" disabled aria-label="Choose Ontology...">
                                 <option value="">Choose Ontology...</option>
                             </select>
                         </div>
@@ -48,21 +50,36 @@
                                 {% endfor %}
                             </select>
                         </div>
-{#                        <div class="col-3">#}
-{#                            <select id="ontsel" name="ontsel" class="form-control form-control-sm" disabled aria-label="Choose Ontology...">#}
-{#                                <option value="">Choose Ontology...</option>#}
-{#                            </select>#}
-{#                        </div>#}
-                        <div class="col-5">
-                            <input id="listsrc" disabled placeholder="Search terms (or scroll)" class="form-control form-control-sm float-end" type="text" aria-label="Search terms..."/>
+                        <div class="col-1">
+                            <div id="spinner" class="spinner-border spinner-border-sm" style="width: 1.5rem; height: 1.5rem;display: none;" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <input id="listsrc" disabled placeholder="Add search string..." class="form-control form-control-sm float-end" type="text" aria-label="Add search string..."/>
                         </div>
                         <div class="col-2">
                             <a id="trmsrc" type="button" class="btn btn-sm btn-success float-end">Search</a>
                         </div>
                     </div>
                 </div>
-                <div id="terms" class="card-body list-group list-group-flush panel-responsive-220">
-
+                <div id="terms" class="card-body list-group list-group-flush panel-responsive-220 py-0 px-0">
+                    <div class="mx-4 my-4">
+                        <h3>Instructions</h3>
+                        <p>To make it easier to manage term information (as there millions of definitions, and counting)
+                            you save the terms you need to refer to in context files in the local database.  This interface
+                            allows you find terms across multiple ontology servers and add them to the local database.
+                        </p>
+                        <ol>
+                            <li>Select the ontology server from the above dropdown menu.  When this is done the search
+                                field above will be enabled (not greyed out).</li>
+                            <li>Add a search string in the search box above.</li>
+                            <li>Click the search button (note these directions will go away!).</li>
+                            <li>Click on the term you wish to save, and the data will be populated in the form on the left.</li>
+                            <li>Click 'Add'!</li>
+                        </ol>
+                        <p>Note: Some of the searches may be slower, so be patient....</p>
+                    </div>
                 </div>
             </div>
         </div>
