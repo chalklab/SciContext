@@ -1,56 +1,93 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="row mt-2">
-        <div class="col-xs-12 col-sm-12 col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+        <div class="col-8 offset-2">
             <div class="card mt-2">
-                <div class="card-header pt-1 pb-1">
+                <div id="header" class="card-header pt-1 pb-1">
                     <div class="row">
                         <div class="col-12">
                             <h4 class="mb-0">Add Context</h4>
                         </div>
                     </div>
                 </div>
-                <div id="form" class="card-body ps-4 pe-4">
-                    <form id="addform" action="/contexts/add/" method="post">
-                        {% csrf_token %}
-                        <div class="form-group row">
-                            <label id="ctx_prjid" for="prjid" class="col-form-label" title="Choose a project">Project (optional):</label>
-                            <select class="form-control" name="prjid" id="prjid" aria-describedby="prjid" {% if not prjs %}disabled{% endif %}>
-                                <option value="">Choose...</option>
-                                {% for prj in prjs %}
-                                    <option value="{{ prj.id }}">{{ prj.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="form-group row">
-                            <label id="ctx_name" for="name" class="col-form-label" title="Add a name">Name:</label>
-                            <input type="text" class="form-control" name="name" id="name" value="" aria-describedby="ctx_name"/>
-                        </div>
-                        <div class="form-group row">
-                            <label id="ctx_desc" for="description" class="col-form-label" title="Add a description">Description:</label>
-                            <input type="text" class="form-control" name="description" id="description" value="" aria-describedby="ctx_desc"/>
-                        </div>
-                        <div class="form-group row">
-                            <label id="ctx_fname" for="filename" class="col-form-label col-4" title="What the filename?">Filename (no extension):</label>
-                            <input type="text" class="form-control" name="filename" id="filename" value="" aria-describedby="filename"/>
-                        </div>
-                        <div class="form-group row">
-                            <label id="ctx_subctxs" for="subctxs" class="col-form-label" title="Contexts to be referenced in the context file">Sub-Contexts:</label>
-                            <select multiple size="{% if ctxs %}5{% else %}1{% endif %}" class="form-control" name="subctxs" id="subctxs" aria-describedby="subctxs" {% if not ctxs %}disabled{% endif %}>
-                                <option value="">{% if ctxs %}Choose...{% else %}Disabled (no contexts){% endif %}</option>
-                                {% for ctx in ctxs %}
-                                    <option value="{{ ctx.id }}">{{ ctx.name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                        <div class="form-group mt-2">
-                            <div class="float-end">
-                                <input type="submit" value="Add"/>
+                <div id="form" class="card-body">
+                    <div class="container-fluid">
+                        <form id="addform" action="/contexts/add/" method="post">
+                            {% csrf_token %}
+                            <div class="input-group mb-2">
+                                <label id="ctx_prjid" for="prjid" class="input-group-text" title="Choose a project">Project (optional):</label>
+                                <select id="prjid" name="prjid" class="form-control" aria-describedby="prjid" {% if not prjs %}disabled{% endif %}>
+                                    <option value="">Choose...</option>
+                                    {% for prj in prjs %}
+                                        <option value="{{ prj.id }}">{{ prj.name }}</option>
+                                    {% endfor %}
+                                </select>
                             </div>
-                        </div>
-                    </form>
+                            <div class="input-group mb-2">
+                                <label id="ctx_name" for="name" class="input-group-text" title="Add a name">Name:</label>
+                                <input type="text" class="form-control" name="name" id="name" value="" aria-describedby="ctx_name"/>
+                            </div>
+                            <div class="input-group mb-2">
+                                <label id="ctx_desc" for="description" class="input-group-text" title="Add a description">Description:</label>
+                                <input type="text" class="form-control" name="description" id="description" value="" aria-describedby="ctx_desc"/>
+                            </div>
+                            <div class="input-group mb-2">
+                                <label id="ctx_fname" for="filename" class="input-group-text" title="What the filename?">Filename (no extension):</label>
+                                <input type="text" class="form-control" name="filename" id="filename" value="" aria-describedby="filename"/>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label id="ctx_version" for="version" class="input-group-text" title="Context version">Context version:</label>
+                                        <input type="text" class="form-control" name="version" id="version" value="" aria-describedby="version"/>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="input-group">
+                                        <label id="ctx_lang" for="lang" class="input-group-text" title="Language">Language:</label>
+                                        <select id="lang" name="lang" class="form-control" aria-describedby="lang">
+                                            <option value="" selected>Select...</option>
+                                            {% for key, val in langs.items %}
+                                                <option value="{{ key }}">{{ val }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="input-group mb-2">
+                                <label id="ctx_vocab" for="vocab" class="input-group-text" title="Vocabulary to be used as default for @type">@vocab (default for @type):</label>
+                                <select id="vocab" name="vocab" class="form-control" aria-describedby="vocab">
+                                    <option value="" selected>Choose vocabulary...</option>
+                                    <option value="https://www.w3.org/2001/XMLSchema#">XML Schema Datatypes (https://www.w3.org/2001/XMLSchema) (common)</option>
+                                    <option value="http://schema.org/">Schema.org (http://schema.org/)</option>
+                                    <option value="http://purl.org/dc/terms">Dublin Core Terms (http://purl.org/dc/terms)</option>
+                                </select>
+                            </div>
+                            <div class="input-group mb-2">
+                                <label id="ctx_subctxs" for="subctxs" class="input-group-text" title="Contexts to be referenced in the context file">Sub-Contexts:<br/>(multiple)</label>
+                                <select multiple size="{% if ctxs %}5{% else %}1{% endif %}" class="form-control" name="subctxs" id="subctxs" aria-describedby="subctxs" {% if not ctxs %}disabled{% endif %}>
+                                    <option value="" selected>{% if ctxs %}Choose one or more...{% else %}Disabled (no contexts){% endif %}</option>
+                                    {% for ctx in ctxs %}
+                                        <option value="{{ ctx.id }}">{{ ctx.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group mt-2">
+                                <div class="float-end">
+                                    <input type="submit" value="Add"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div id="footer" class="card-footer">
+                    <p class="mb-1" style="text-align: justify;"><b>Note</b>: Not all options for context files are
+                        presented above.  For more information see:
+                        <a href="https://www.w3.org/TR/json-ld/#context-definitions" target="_blank">
+                            https://www.w3.org/TR/json-ld/</a>.  Please add an issue to the repo if
+                        there are options you want added above.</p>
                 </div>
             </div>
         </div>
     </div>
-    {% endblock %}
+{% endblock %}

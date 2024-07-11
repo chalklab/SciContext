@@ -1,11 +1,13 @@
 """ terms view file """
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.decorators.csrf import csrf_exempt
-from config.functions import *
-from django.http import JsonResponse
 from datetime import datetime
-import urllib.request, urllib.parse, urllib.error
+from config.functions import *
 import json
+import urllib.error
+import urllib.parse
+import urllib.request
 
 
 # Create your views here.
@@ -32,15 +34,19 @@ def add(request):
         term.title = data['title']
         term.definition = data['definition']
         term.code = data['code']
-        ont = Onts.objects.get(ns=data['ns'], server_id=data['svrid'])  # ns is the text code for the ontology
+        if data['ns'].isnumeric():  # ns is an integer (as a string) if term is from local ontology
+            ont = Onts.objects.get(id=data['ns'])
+        else:
+            ont = Onts.objects.get(ns=data['ns'], server_id=data['svrid'])  # ns is the text code for the ontology
         term.ont_id = ont.id
-        term.iri = ont.path + ':' + data['code']
+        term.iri = ont.path + '#' + data['code']
         term.updated = datetime.now()
         term.save()
         return redirect('/terms/')
 
     svrs = Servers.objects.all()
-    return render(request, "terms/add.html", {'svrs': svrs})
+    onts = Onts.objects.filter(server_id=None)  # gets all ontologies that have been added local only
+    return render(request, "terms/add.html", {'svrs': svrs, 'onts': onts})
 
 
 @csrf_exempt
@@ -58,7 +64,8 @@ def byont(request, svrid, ontid):
 @csrf_exempt
 def trmsrc(request, svrid, srcstr):
     svr = Servers.objects.get(id=svrid)
-    with urllib.request.urlopen(svr.apiurl + 'search?q=' + urllib.parse.quote_plus(srcstr) + '&exact=true&rows=10000&lang=en') as url:
+    with urllib.request.urlopen(
+            svr.apiurl + 'search?q=' + urllib.parse.quote_plus(srcstr) + '&exact=true&rows=10000&lang=en') as url:
         data = json.loads(url.read().decode())
     terms = data['response']['docs']
     # return JsonResponse(terms, safe=False, status=200)
@@ -85,8 +92,8 @@ def trmsrc(request, svrid, srcstr):
                 desc = tmp[0]
         else:
             desc = "Not available"
-        tlist.update({term['short_form']:
-                          {"title": term['label'], 'defn': desc, 'ns': term['ontology_name'], 'type': term['type']}})
+        tlist.update({term['short_form']: {"title": term['label'], 'defn': desc, 'ns': term['ontology_name'],
+                                           'type': term['type']}})
     # generate output list of dictionaries
     output = []
     for key, value in tlist.items():

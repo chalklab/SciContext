@@ -3,7 +3,7 @@ from github.GithubException import *
 from config.localsettings import ghtoken
 
 
-def addctxfile(path, message, file, repo="scidata", token=ghtoken):
+def addctxfile(path, message, file, repo="SciContext", token=ghtoken):
     """
     Push file update to GitHub repo
 

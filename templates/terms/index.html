@@ -11,7 +11,7 @@
                         </div>
                         <div class="col-5 px-0">
                         {% if terms|length > 10 %}
-                            <input id="btnsrc" placeholder="Search terms (or scroll)" class="form-control form-control-sm float-right" data-search-override="true" aria-label="Search terms" type="text"/>
+                            <input id="listsrc" placeholder="Search terms (or scroll)" class="form-control form-control-sm float-right" data-search-override="true" aria-label="Search terms" type="text"/>
                         {% endif %}
                         </div>
                         <div class="col-2 px-0">
@@ -21,7 +21,7 @@
                 </div>
                 <div id="onts" class="card-body list-group list-group-flush panel-responsive-220 py-0 px-0">
                     {% for term in terms %}
-                        <a class="list-group-item items py-1" href="/terms/view/{{ term.id }}">{{ term.title }}</a>
+                        <a class="list-group-item item py-1" data-content="{{ term.title|lower }} {{ term.definition|lower }}" href="/terms/view/{{ term.id }}">{{ term.title }}: <em>{{ term.definition }}</em></a>
                     {% endfor %}
                 </div>
             </div>

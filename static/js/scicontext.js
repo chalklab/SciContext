@@ -205,10 +205,11 @@ $(document).ready(function() {
                     let trm = data[i];
                     let disp = '(<span class="emph_green">' + trm['ns'] + '</span>) [' + trm['code'] + '] ' +
                         trm['title'] + ': <em>' + trm['defn'] + '</em> (<span class="emph_red">' + trm['type'] + '</span>)';
+                    let content = trm['title'].toLowerCase() + ' ' + trm['defn'].toLowerCase() + ' ' +
+                        trm['ns'].toLowerCase() + trm['code'].toLowerCase()
                     let hit = '<a class="list-group-item item item-sm addtrm" data-svrid="' + svrid + '" data-code="' +
                         trm['code'] + '" data-title="' + trm['title'] + '" data-ns="' + trm['ns'] + '" data-defn="' +
-                        trm['defn'] + '" data-ontid="' + trm['ontid'] + '" data-content="' + trm['title'].toLowerCase() + ' ' +
-                        trm['defn'].toLowerCase() + ' ' + trm['ns'].toLowerCase() + '" style="cursor: pointer;">' + disp + '</a>'
+                        trm['defn'] + '" data-ontid="' + trm['ontid'] + '" data-content="' + content + '" style="cursor: pointer;">' + disp + '</a>'
                     div.append(hit);
                 }
                 spin.hide();
@@ -276,8 +277,8 @@ $(document).ready(function() {
 
     // create context JSON-LD file
     $("#createctx").on('click', function () {
-        let id = $("#createctx").attr('dbid');
-        $.get('/contexts/write/' + id).done(function() { alert( "Context file saved :)" ); });
+        let ctxid = $("#createctx").data('ctxid');
+        $.get('/contexts/write/' + ctxid).done(function() { alert( "Context file saved :)" ); });
         return false;
     });
 

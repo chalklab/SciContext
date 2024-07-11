@@ -2,7 +2,7 @@
 {% block title %} Ontology List {% endblock %}
 {% block content %}
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-10 offset-md-1">
+        <div class="col-10 offset-1">
             <div class="card mt-2">
                 <div class="card-header pt-1 pb-1">
                     <div class="row g-3">
@@ -17,7 +17,7 @@
                         </div>
                     </div>
                 </div>
-                <div id="onts" class="card-body list-group list-group-flush panel-responsive-220 py-0 pr-0">
+                <div id="onts" class="card-body list-group list-group-flush panel-responsive-220 py-0 px-0">
                     {% for ont in onts %}
                         {% if ont.name %}
                             <a class="list-group-item item py-1" data-content="{{ ont.name|lower }} {{ ont.server.abbrev|lower }}" href="/onts/view/{{ ont.id }}">

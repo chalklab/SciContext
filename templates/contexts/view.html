@@ -2,7 +2,7 @@
 {% block title %} Context View {% endblock %}
 {% block content %}
     <div class="row pb-2">
-        <div class="col-8 offset-1">
+        <div class="col-9 offset-1">
             <h3>Context: {{ context.name }}</h3>
             <ul>
                 <li>Project: {{ context.project.name }}</li>
@@ -20,6 +20,9 @@
                     </li>
                 {% endif %}
             </ul>
+        </div>
+        <div class="col-1">
+            <button id="createctx" data-ctxid="{{ context.id }}" type="button" class="btn btn-info float-end">Create Context</button>
         </div>
     </div>
     <div class="row">

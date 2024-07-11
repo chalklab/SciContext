@@ -3,8 +3,12 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 from config.functions import *
+from config.langs import *
 from config.git_functions import *
 from datetime import datetime
+from collections import OrderedDict
+from config.settings import *
+import os
 
 
 def home(request):
@@ -45,16 +49,19 @@ def add(request):
             ctx.project_id = data['prjid']
         else:
             ctx.project_id = None
+        ctx.version = data['version']
+        ctx.vocab = data['vocab']
+        ctx.language = data['lang']
         temp = list(request.POST.getlist('subctxs'))
         ctx.subcontexts = ','.join(temp)  # bizarre syntax, but it works!
         ctx.updated = datetime.now()
         ctx.save()
-        # TODO: save field entries that have not been saved?
         return redirect('/contexts/view/' + str(ctx.id))
 
     ctxs = getctxs()
     prjs = getprjs()
-    return render(request, "contexts/add.html", {'ctxs': ctxs, 'prjs': prjs})
+    # load languages from config/langs.py (lang variable)
+    return render(request, "contexts/add.html", {'ctxs': ctxs, 'prjs': prjs, 'langs': langs})
 
 
 # ajax functions (wrappers)
@@ -112,27 +119,42 @@ def jscwkread(request, cwkid=""):
 @csrf_exempt
 def jswrtctx(request, ctxid: int):
     ctx = Contexts.objects.get(id=ctxid)
-    tpl = '{"@vocab": "https://www.w3.org/2001/XMLSchema#",' \
-          '"sdo": "https://stuchalk.github.io/scidata/ontology/scidata.owl#"}'
+    tpl = '{"@vocab": "' + ctx.vocab + '"}'
     cdict = json.loads(tpl)
     nss = {}
     # add namespaces
-    for cwk in ctx.contextsfields_set.all():
-        nss.update({cwk.term.nspace.ns: cwk.term.nspace.path})
-    for key in nss:
+    for cfjoin in ctx.contextsfields_set.all():
+        ns = cfjoin.field.term.ont.ns
+        if '.owl' in cfjoin.field.term.ont.path:
+            path = cfjoin.field.term.ont.path + '#'
+        else:
+            path = cfjoin.field.term.ont.path
+        nss.update({ns: path})
+    srtd = OrderedDict(sorted(dict.items(nss)))
+    for key in srtd.keys():
         cdict.update({key: nss[key]})
     # add entries
-    for cwk in ctx.contextsfields_set.all():
+    for cfjoin in ctx.contextsfields_set.all():
         tmp = {}
-        if cwk.datatype == '@list':
-            tmp.update({"@id": cwk.term.url, "@type": "string", "@container": "@list"})
+        shortiri = cfjoin.field.term.ont.ns + ':' + cfjoin.field.term.code
+        dtype = cfjoin.field.datatype
+        if cfjoin.field.datatype == '@list':
+            tmp.update({"@id": shortiri, "@type": dtype, "@container": "@list"})
         else:
-            tmp.update({"@id": cwk.term.url, "@type": cwk.datatype})
-        if cwk.newname:
-            cdict.update({cwk.newname: tmp})
-        else:
-            cdict.update({cwk.field: tmp})
+            tmp.update({"@id": shortiri, "@type": dtype})
+        cdict.update({cfjoin.field.name: tmp})
     jld = {"@context": cdict}
-    text = json.dumps(jld, separators=(',', ':'))
-    resp = addctxfile('contexts/' + ctx.filename + '.jsonld', 'commit via API ' + str(datetime.now()), text)
+    # check for being part of a project
+    fpath = 'website/contexts/'
+    if ctx.project_id:
+        fpath += ctx.project.prefix + '_'
+    fpath += ctx.filename + '.jsonld'
+    jsn = json.dumps(jld, separators=(',', ':'))
+    # save local
+    os.makedirs(os.path.dirname(BASE_DIR + '/website/contexts/'), exist_ok=True)  # create a directory if not exist
+    with open(fpath, "w") as f:
+        f.write(jsn)
+    f.close()
+    # save on GitHub
+    resp = addctxfile(fpath, 'commit via API ' + str(datetime.now()), jsn)
     return JsonResponse({"response": resp}, status=200)

@@ -29,6 +29,7 @@ class Contexts(models.Model):
     description = models.CharField(max_length=128, blank=True, null=True)
     version = models.CharField(max_length=8, blank=True, null=True)
     vocab = models.CharField(max_length=64, blank=True, null=True)
+    language = models.CharField(max_length=2, blank=True, null=True)
     base = models.CharField(max_length=128, blank=True, null=True)
     filename = models.CharField(max_length=128, blank=True, null=True)
     subcontexts = models.CharField(max_length=256, blank=True, null=True)

@@ -19,14 +19,18 @@
                             <input type="text" class="form-control" id="trm_title" name="title" placeholder="Term" value="" aria-label="Term"/>
                         </div>
                         <div class="row ps-2 pe-2 mb-3">
-                            <input type="text" class="form-control" id="trm_defn" name="definition" placeholder="Definition" value="" aria-label="Definition"/>
+                            <textarea class="form-control" id="trm_defn" rows="5"  name="definition" placeholder="Definition" aria-label="Definition"></textarea>
                         </div>
                         <div class="row ps-2 pe-2 mb-3">
                             <input type="text" class="form-control" id="trm_code" name="code" placeholder="Term Code" value="" aria-label="Term Code"/>
                         </div>
                         <div class="row ps-2 pe-2 mb-3">
-                            <select class="form-control" id="trm_ont" name="ns" disabled aria-label="Choose Ontology...">
+                            <select class="form-control" id="trm_ont" name="ns" {% if onts|length == 0 %}disabled {% endif %}aria-label="Choose Ontology...">
                                 <option value="">Choose Ontology...</option>
+                                {% for ont in onts %}
+                                    <!-- ont ID is used here to identify these are local (not from server) ontologies -->
+                                    <option value="{{ ont.id }}">{{ ont.name }}</option> 
+                                {% endfor %}
                             </select>
                         </div>
                         <div class="row">
