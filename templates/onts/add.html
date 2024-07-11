@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
     <div class="row mt-2">
-        <div class="col-xs-12 col-sm-12 col-md-5 offset-md-1">
+        <div class="col-6">
             <div class="card mt-2">
                 <div class="card-header pt-1 pb-1">
                     <div class="row">
@@ -14,23 +14,23 @@
                 <div id="form" class="card-body panel-responsive-220">
                     <form action="/onts/add/" method="post">
                         {% csrf_token %}
-                        <div class="form-group row">
-                            <label for="name" class="col-form-label col-md-3" title="Identify the namespace">Name:</label>
-                            <input type="text" class="form-control col-md-8" name="name" id="name"/>
+                        <div class="input-group row mb-2">
+                            <label for="name" class="col-form-label col-3" title="Identify the namespace">Name:</label>
+                            <input type="text" class="form-control col-8" name="name" id="name"/>
                         </div>
-                        <div class="form-group row">
-                            <label for="alias" class="col-form-label col-md-3" title="Give a short (up to 4 char) alias">Alias:</label>
-                            <input type="text" class="form-control col-md-8" name="alias" id="alias"/>
+                        <div class="input-group row mb-2">
+                            <label for="alias" class="col-form-label col-3" title="Give a short (up to 4 char) alias">Alias:</label>
+                            <input type="text" class="form-control col-8" name="alias" id="alias" placeholder="Give a short (up to 4 char) alias"/>
                         </div>
-                        <div class="form-group row">
-                            <label for="path" class="col-form-label col-md-3" title="Base URL of the ontology">Path:</label>
-                            <input type="text" class="form-control col-md-8" name="path" id="path"/>
+                        <div class="input-group row mb-2">
+                            <label for="path" class="col-form-label col-3" title="Base URL of the ontology">Path:</label>
+                            <input type="text" class="form-control col-8" name="path" id="path"/>
                         </div>
-                        <div class="form-group row">
-                            <label for="homepage" class="col-form-label col-md-3" title="Website URL for ontology">Homepage:</label>
-                            <input type="text" class="form-control col-md-8" name="homepage" id="homepage"/>
+                        <div class="input-group row mb-2">
+                            <label for="homepage" class="col-form-label col-3" title="Website URL for ontology">Homepage:</label>
+                            <input type="text" class="form-control col-8" name="homepage" id="homepage"/>
                         </div>
-                        <div class="row ps-2 pe-2 mb-3">
+                        <div class="row ps-2 pe-2 mb-2">
                             <select class="form-control" id="svrid" name="svrid" aria-label="Choose Ontology Server">
                                 <option value="">Choose Ontology Server...</option>
                                 {% for id, name in svrs %}
@@ -38,7 +38,7 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        <div class="form-group">
+                        <div class="input-group">
                             <div class="float-right">
                                 <input type="submit" value="Add"/>
                             </div>
@@ -47,7 +47,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-5">
+        <div class="col-6">
             <div class="card mt-2">
                 <div class="card-header pt-1 pb-1">
                     <div class="row">

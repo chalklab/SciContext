@@ -6,6 +6,7 @@ from onts import views
 urlpatterns = [
     path("", views.index, name='Ontology index'),
     path("view/<ontid>", views.view, name='Ontology view'),
+    path("add/", views.add, name='Add ontology'),
     path("ontget/<svrid>", views.ontget, name='Server ontology update (JS)'),
     path("ontupd/<svrid>", views.ontupd, name='Load onts in server to DB'),
     path("bysvr/<svrid>", views.bysvr, name='Ontology list by server'),

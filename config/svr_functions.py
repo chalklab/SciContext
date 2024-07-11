@@ -49,10 +49,12 @@ def svrsearch(svrid, query):
     results = []
     if svr.type == 'ols':
         client = Ols4Client()
-        resp = client.search(query, params={"exact": True})
+        resp = client.search(query, params={"exact": 'true', "rows": 1000})
         hits = resp.response.docs
         for hit in hits:
-            results.append({'title': hit.label, 'desc': hit.description, 'iri': hit.iri})
+            if hit['is_defining_ontology'] == 'false':
+                continue
+            results.append({'title': hit.label, 'desc': hit.description, 'iri': hit.iri, 'type': hit['type']})
     else:
         pass
     return results

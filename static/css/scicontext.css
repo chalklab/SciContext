@@ -44,6 +44,10 @@
     color: darkred;
 }
 
+.emph_green {
+    color: darkgreen;
+}
+
 .item-sm {
     padding: 4px 8px;
 }

@@ -4,6 +4,7 @@ $(document).ready(function() {
         let svrid = $('#svrsel option:selected').val();
         let spin = $('#spinner')
         let sel = $("#trm_ont");
+        let src = $("#srcstr");
         spin.show();
         $.ajax({
             type: 'POST',
@@ -18,7 +19,7 @@ $(document).ready(function() {
                     sel.append(ostr);
                 }
                 sel.prop("disabled", false);
-                $("#listsrc").prop("disabled", false);
+                src.prop("disabled", false);
                 spin.hide();
                 return false;
                 },
@@ -61,7 +62,7 @@ $(document).ready(function() {
         let input = $('#alias');
         let nss = $('#aliases').html();
         let ns = input.val();
-        if (nss.includes(ns)) {
+        if (nss.includes(':' + ns + ':')) {
             input.val('');
             alert('Alias already in use');
         }
@@ -185,12 +186,14 @@ $(document).ready(function() {
 
     // search and show/hide terms in card
     $("#trmsrc").on('click',function(){
-        let srcstr = $('#listsrc').val();
+        let srcstr = $('#srcstr').val();
         let svrid = $('#svrsel option:selected').val();
         let div = $("#terms");
-        let spin = $('#spinner')
+        let spin = $('#spinner');
+        let sub = $('#subsrc');
         div.empty();  // remove previous search results
-        spin.show();
+        spin.show();  // show spinner
+        sub.hide();  // hide subsearch input in footer
         $.ajax({
             type: 'POST',
             dataType: "json",
@@ -200,13 +203,18 @@ $(document).ready(function() {
                 let cnt = data.length;
                 for(let i = 0; i<cnt; i++) {
                     let trm = data[i];
+                    let disp = '(<span class="emph_green">' + trm['ns'] + '</span>) [' + trm['code'] + '] ' +
+                        trm['title'] + ': <em>' + trm['defn'] + '</em> (<span class="emph_red">' + trm['type'] + '</span>)';
                     let hit = '<a class="list-group-item item item-sm addtrm" data-svrid="' + svrid + '" data-code="' +
                         trm['code'] + '" data-title="' + trm['title'] + '" data-ns="' + trm['ns'] + '" data-defn="' +
-                        trm['defn'] + '" data-ontid="' + trm['ontid'] + '" style="cursor: pointer;">['
-                        + trm['code'] + '] ' + trm['title'] + ': <em>' + trm['defn'] + '</em></a>'
+                        trm['defn'] + '" data-ontid="' + trm['ontid'] + '" data-content="' + trm['title'].toLowerCase() + ' ' +
+                        trm['defn'].toLowerCase() + ' ' + trm['ns'].toLowerCase() + '" style="cursor: pointer;">' + disp + '</a>'
                     div.append(hit);
                 }
                 spin.hide();
+                if(cnt>10) {
+                    sub.show();
+                }
                 return false;
                 },
             error: function () {

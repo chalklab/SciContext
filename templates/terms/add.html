@@ -40,7 +40,7 @@
         </div>
         <div class="col col-8">
             <div class="card mt-2">
-                <div class="card-header pt-1 pb-1">
+                <div id="header" class="card-header pt-1 pb-1">
                     <div class="row">
                         <div class="col-5">
                             <select id="svrsel" name="svrsel" class="form-control form-control-sm" aria-label="Choose Server...">
@@ -56,7 +56,7 @@
                             </div>
                         </div>
                         <div class="col-4">
-                            <input id="listsrc" disabled placeholder="Add search string..." class="form-control form-control-sm float-end" type="text" aria-label="Add search string..."/>
+                            <input id="srcstr" disabled placeholder="Add search string..." class="form-control form-control-sm float-end" type="text" aria-label="Add search string..."/>
                         </div>
                         <div class="col-2">
                             <a id="trmsrc" type="button" class="btn btn-sm btn-success float-end">Search</a>
@@ -76,9 +76,14 @@
                             <li>Add a search string in the search box above.</li>
                             <li>Click the search button (note these directions will go away!).</li>
                             <li>Click on the term you wish to save, and the data will be populated in the form on the left.</li>
-                            <li>Click 'Add'!</li>
+                            <li>Click 'Add' to store the term in the database.</li>
                         </ol>
-                        <p>Note: Some of the searches may be slower, so be patient....</p>
+                        <p>Note: Some searches may be slower than others, so be patient....</p>
+                    </div>
+                </div>
+                <div id="footer" class="card-footer">
+                    <div id="subsrc" class="col-5 offset-7" style="display: none;">
+                        <input id="listsrc" placeholder="Search terms above..." class="form-control form-control-sm" type="text" aria-label="Search terms above..."/>
                     </div>
                 </div>
             </div>

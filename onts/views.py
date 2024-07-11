@@ -45,7 +45,7 @@ def add(request):
     aliases = ontaliases()
     svrs = Servers.objects.all().values_list('id', 'name').order_by('name')
     oonts = allonts()  # list of tuples (four values)
-    oonts.sort(key=lambda tup: tup[1])
+    # oonts.sorted(key=lambda tup: tup[1])
     return render(request, "onts/add.html", {'aliases': aliases, 'onts': oonts, 'svrs': svrs})
 
 
