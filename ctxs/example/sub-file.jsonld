@@ -1,0 +1,12 @@
+{
+    "@context": [
+        "https://chalklab.github.io/SciContext/ctxs/example/sub-ctx.jsonld",
+        {"obo": "http://purl.obolibrary.org/obo/"},
+        {"@base": "https://chalklab.github.io/SciContext/ctxs/example/"}
+    ],
+    "@id": "",
+    "name": "benzene",
+    "chebi": "obo:CHEBI_16716",
+    "formula": "C6H6",
+    "molweight": 78.11
+}
