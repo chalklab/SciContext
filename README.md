@@ -21,3 +21,5 @@ in the ontologies they aggregate.
 On the other side context files for JSON-LD documents have sort of abstract as in of themselves they are not so useful.
 However, in order for JSON-LD files to be converted accurately into RDF they are critical and so writing and publishing 
 them 
+
+![scicontext_data_model.jpg](images/scicontext_data_model.jpg)
