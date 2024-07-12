@@ -19,4 +19,4 @@ To prove this works and produces valid RDF you can use the JSON-LD Playground to
 formats.  You can see this by clicking this [link](https://tinyurl.com/2mkhg6f4). The RDF that is produced is 
 (shortened for clarity):
 
-<div align="center"><img src="images/example_rdf.png" alt="JSON-LD context file" width="700"></div>
+![example_rdf.png](images/example_rdf.png)
