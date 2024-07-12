@@ -1,0 +1,24 @@
+{
+    "@context": {
+        "@vocab": "https://www.w3.org/2001/XMLSchema#",
+        "cheminf": "http://purl.obolibrary.org/obo/cheminf.owl#",
+        "mi": "http://purl.obolibrary.org/obo/mi.owl#",
+        "ncit": "http://purl.obolibrary.org/obo/ncit.owl#",
+        "name": {
+            "@id": "cheminf:CHEMINF_000107",
+            "@type": "string"
+        },
+        "chebi": {
+            "@id": "mi:MI_0474",
+            "@type": "@id"
+        },
+        "formula": {
+            "@id": "ncit:NCIT_C48808",
+            "@type": "string"
+        },
+        "molweight": {
+            "@id": "ncit:NCIT_C28272",
+            "@type": "decimal"
+        }
+    }
+}
