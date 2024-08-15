@@ -33,7 +33,7 @@ def view(request, ctxid):
     flds = Fields.objects.filter(id__in=fldids)
     trms = gettrms()
     return render(request, "contexts/view.html",
-                  {'context': ctx, 'fields': flds, 'trms': trms, 'ctxs': ctxs, 'subids': subids})
+                  {'context': ctx, 'fields': flds, 'trms': trms, 'ctxs': ctxs, 'subids': subids, 'act': 'Add'})
 
 
 def add(request):

@@ -1,5 +1,6 @@
 {% block form %}
-    <form id="fieldform" action="/fields/add/" method="post">
+    <form id="fieldform" action="/fields/{{ act|lower }}/{{ fld.id }}" method="post">
+        {% csrf_token %}
         <div class="container-fluid">
             <input id="ctxid" name="ctxid" type="hidden" value="{{ context.id }}"/>
             <div class="input-group row mb-2">
@@ -9,7 +10,7 @@
             <div class="input-group row mb-2">
                 <label for="term_id" class="input-group-text col-3" title="Ontology term (required)">Ontology term*</label>
                 <select id="term_id" name="term_id" class="form-control col-9">
-                    <option value="" selected>Choose...</option>
+                    <option value="" {% if fld.term_id is None %} selected{% endif %}>Choose...</option>
                     {% for trm in trms %}
                         <option value="{{ trm.id }}" {% if trm.id == fld.term_id %} selected{% endif %}>{{ trm.title }}</option>
                     {% endfor %}
@@ -17,39 +18,39 @@
             </div>
             <div class="input-group row mb-2">
                 <label for="category" class="input-group-text col-3" title="Metadata category (optional)">Metadata category</label>
-                <input id="category" name="category" type="text" data-old="" class="form-control col-9"/>
+                <input id="category" name="category" type="text" data-old="" value="{{ fld.category }}" class="form-control col-9"/>
             </div>
             <div class="input-group row mb-2">
                 <label for="container" class="input-group-text col-3" title="@container (optional)">@container<br>(multiselect)</label>
                 <select id="container" name="container" multiple size="3" class="form-control col-9">
-                    <option value="" selected>Choose...</option>
-                    <option value="graph">@graph</option>
-                    <option value="id">@id</option>
-                    <option value="index">@index</option>
-                    <option value="lang">@language</option>
-                    <option value="list">@list</option>
-                    <option value="set">@set</option>
-                    <option value="type">@type</option>
+                    <option value="" {% if fld.container is None %} selected {% endif %}>Choose...</option>
+                    <option value="graph" {% if "graph" in fld.container %} selected {% endif %}>@graph</option>
+                    <option value="id" {% if "id" in fld.container %} selected {% endif %}>@id</option>
+                    <option value="index" {% if "index" in fld.container %} selected {% endif %}>@index</option>
+                    <option value="lang" {% if "lang" in fld.container %} selected {% endif %}>@language</option>
+                    <option value="list" {% if "list" in fld.container %} selected {% endif %}>@list</option>
+                    <option value="set" {% if "set" in fld.container %} selected {% endif %}>@set</option>
+                    <option value="type" {% if "type" in fld.container %} selected {% endif %}>@type</option>
                 </select>
             </div>
             <div class="input-group row mb-2">
                 <label for="datatype" class="input-group-text col-3">Datatype*</label>
                 <select id="datatype" name="datatype" class="form-control col-9">
-                    <option value="" selected>Choose XSD Datatype...</option>
-                    <option value="string">String (most common)</option>
-                    <option value="dateTime">Date/Time</option>
-                    <option value="decimal">Decimal</option>
-                    <option value="float">Float (32 bit)</option>
-                    <option value="double">Float (64 bit)</option>
-                    <option value="integer">Integer</option>
-                    <option value="nonNegativeInteger">Non-Negative Integer</option>
-                    <option value="anyURI">URI</option>
-                    <option value="@id">@id</option>
+                    <option value="" {% if fld.datatype is None %} selected {% endif %}>Choose XSD Datatype...</option>
+                    <option value="string" {% if fld.datatype == "string" %} selected {% endif %}>String (most common)</option>
+                    <option value="dateTime" {% if fld.datatype == "dateTime" %} selected {% endif %}>Date/Time</option>
+                    <option value="decimal" {% if fld.datatype == "decimal" %} selected {% endif %}>Decimal</option>
+                    <option value="float" {% if fld.datatype == "float" %} selected {% endif %}>Float (32 bit)</option>
+                    <option value="double" {% if fld.datatype == "double" %} selected {% endif %}>Float (64 bit)</option>
+                    <option value="integer" {% if fld.datatype == "integer" %} selected {% endif %}>Integer</option>
+                    <option value="nonNegativeInteger" {% if fld.datatype == "nonNegativeInteger" %} selected {% endif %}>Non-Negative Integer</option>
+                    <option value="anyURI" {% if fld.datatype == "anyURI" %} selected {% endif %}>URI</option>
+                    <option value="@id" {% if fld.datatype == "@id" %} selected {% endif %}>@id</option>
                 </select>
             </div>
             <div class="form-group mt-2">
                 <div class="float-end">
-                    <input type="submit" value="Add"/>
+                    <input id="submit" type="submit" value="{{ act }}"/>
                 </div>
             </div>
         </div>

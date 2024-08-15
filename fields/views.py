@@ -35,7 +35,7 @@ def edit(request, fldid):
         fld.name = data['name']
         fld.term_id = data['term_id']
         fld.category = data['category']
-        fld.container = json.dumps(data['container'])
+        fld.container = ",".join(data.getlist('container'))
         fld.datatype = data['datatype']
         fld.updated = datetime.now()
         fld.save()
@@ -49,8 +49,10 @@ def edit(request, fldid):
     for ctx in ctxs:
         ctxlist.append(ctx.id)
     allctxs = Contexts.objects.all()
-    return render(request, "fields/view.html",
-                  {'field': field, 'ctxs': ctxs, 'allctxs': allctxs, 'ctxlist': ctxlist})
+    trms = gettrms()
+    return render(request, "fields/edit.html",
+                  {'fld': field, 'ctxs': ctxs, 'allctxs': allctxs, 'ctxlist': ctxlist,
+                   'act': 'Edit', 'trms': trms})
 
 
 @csrf_exempt
