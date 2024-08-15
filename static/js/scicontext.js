@@ -167,16 +167,18 @@ $(document).ready(function() {
     });
 
     // remove a field entry
-    $(".delfld").on('click', function () {
+    $(".delctxfld").on('click', function () {
         let fld = $(this);
-        let fldid = fld.attr('fldid');
-        $.post('/fields/delete/', {fld: fldid})
+        let fldid = fld.data('fldid');
+        let ctxid = $('#ctxid').val()
+        let token = $('input[name="csrfmiddlewaretoken"]').val();
+        $.post('/fields/delete/', {fldid: fldid, ctxid: ctxid, csrfmiddlewaretoken: token})
             .done(function ( data ) {
                 // hide dom elements
-                if(data['response']==='success') {
+                if(data==='success') {
                     $(".editfld[fldid='" + fldid + "']").hide();
                     $(".delfld[fldid='" + fldid + "']").hide();
-                    alert("Field deleted :)");
+                    alert("Field removed from this context :)");
                 } else {
                     alert("Deletion error :(");
                 }
