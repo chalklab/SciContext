@@ -55,6 +55,18 @@ def edit(request, fldid):
                    'act': 'Edit', 'trms': trms})
 
 
+def delete(request):
+    if request.method == "POST":
+        fldid = request.POST['fldid']
+        ctxid = request.POST['ctxid']
+        fcjoin = ContextsFields.objects.get(field_id=fldid, context_id=ctxid)
+        fcjoin.delete()
+        resp = "success"
+    else:
+        resp = "error"
+    return JsonResponse(resp, safe=False, status=200)
+
+
 @csrf_exempt
 def add(request):
     # save new field

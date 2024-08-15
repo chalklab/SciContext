@@ -42,21 +42,21 @@
                     </div>
                 </div>
                 <div class="card-body list-group list-group-flush panel-responsive-320 py-0 pr-0">
-                <div id="flds" class="row">
-                    {% for fld in fields %}
-                        <div class="col-9 pr-0">
-                            <a id="fld{{ fld.id }}" href="/fields/view/{{ fld.id }}" class="list-group-item items py-1" data-fldid="{{ fld.id }}" style="cursor: pointer;">
-                                <b>{{ fld.name }} -></b> ({{ fld.datatype }}) means <em>{{ fld.term.title }}</em> [{{ fld.term.ont.ns }}:{{ fld.term.code }}]</a>
-                        </div>
-                        <div class="col-2 pr-0 mt-1">
-                            <a href="/terms/view/{{ fld.term.id }}">TERM</a>, <a href="/onts/view/{{ fld.term.ont.id }}">ONT</a>
-                        </div>
-                        <div class="col-1 pl-0">
-                            <button class="btn btn-sm btn-danger delfld col-12" data-fldid="{{ fld.id }}" title="Delete">X</button>
-                        </div>
-                    {% endfor %}
+                    {% csrf_token %}
+                    <input id="ctxid" type="hidden" value="{{ context.id }}">
+                    <div id="flds" class="row">
+                        {% for fld in fields %}
+                            <div class="col-10 pr-0">
+                                <a id="fld{{ fld.id }}" href="/fields/view/{{ fld.id }}" class="list-group-item items py-1" data-fldid="{{ fld.id }}" style="cursor: pointer;">
+                                    <b>{{ fld.name }} -></b> ({{ fld.datatype }}) means <em>{{ fld.term.title }}</em> [{{ fld.term.ont.ns }}:{{ fld.term.code }}]</a>
+                            </div>
+                            <div class="col-2 pr-0 mt-1">
+                                <a class="btn btn-sm btn-success" href="/terms/view/{{ fld.term.id }}">TERM</a> <a class="btn btn-sm btn-warning" href="/onts/view/{{ fld.term.ont.id }}">ONT</a>
+                                <button class="btn btn-sm btn-danger delctxfld" data-fldid="{{ fld.id }}" title="Delete">DEL</button>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
-            </div>
             </div>
         </div>
     </div>
