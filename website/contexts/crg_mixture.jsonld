@@ -1,0 +1,1 @@
+{"@context":{"@vocab":"https://www.w3.org/2001/XMLSchema#","sio":"https://raw.githubusercontent.com/micheldumontier/semanticscience/master/ontology/sio/release/sio-release.owl#","test":{"@id":"sio:SIO_000118","@type":"string"}}}
