@@ -19,7 +19,9 @@
                 </div>
                 <div id="flds" class="card-body list-group list-group-flush panel-responsive-220 py-0 pr-0">
                     {% for fld in flds %}
-                        <a class="list-group-item item py-1" data-content="{{ fld.name|lower }}" href="/fields/view/{{ fld.id }}">{{ fld.name }}</a>
+                        <a class="list-group-item item py-1" data-content="{{ fld.name|lower }}" href="/fields/view/{{ fld.id }}">{{ fld.name }}:
+                            (used in {% for j in fld.contextsfields_set.all %} {% if not forloop.last %}, {% endif %}{{ j.context.name }}{% endfor %})
+                        </a>
                     {% endfor %}
                 </div>
             </div>

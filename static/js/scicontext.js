@@ -148,6 +148,23 @@ $(document).ready(function() {
         clone.insertAfter("div." + type + ":last");
     });
 
+    // add field to context
+    $('#ctxfldadd').on('change', function () {
+        let ctxid = $(this).find(":selected").val();
+        let fldid = $("#fldid").data('fldid');
+        // alert(ctxid + ":" + fldid);
+        $.post('/fields/join/', {fldid: fldid, ctxid: ctxid})
+            .done(function (data) {
+                // hide dom elements
+                if (data === 'success') {
+                    window.location.replace("/fields/view/" + fldid);
+                } else {
+                    alert("Deletion error :(");
+                }
+            });
+        return false;
+    });
+
     // Remove: save field data in form before adding a new field ...
     $(".updfld").on('change', function () {
         let input = $(this);
@@ -168,9 +185,20 @@ $(document).ready(function() {
 
     // remove a field entry
     $(".delctxfld").on('click', function () {
-        let fld = $(this);
-        let fldid = fld.data('fldid');
-        let ctxid = $('#ctxid').val()
+        let btn = $(this);
+        let fldid;let ctxid;
+        if(btn.find('.flddel')) {
+            ctxid = btn.data('ctxid');
+            fldid = $('#fldid').val()
+            alert(fldid + ":" + ctxid)
+        }
+        if(btn.find('.ctxdel')) {
+            fldid = btn.data('fldid');
+            ctxid = $('#ctxid').val()
+            alert(fldid + ":" + ctxid)
+        }
+        // alert(fldid + ":" + ctxid)
+        return false;
         let token = $('input[name="csrfmiddlewaretoken"]').val();
         $.post('/fields/delete/', {fldid: fldid, ctxid: ctxid, csrfmiddlewaretoken: token})
             .done(function ( data ) {

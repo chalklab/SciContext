@@ -30,7 +30,6 @@ def edit(request, fldid):
     # edit field
     if request.method == "POST":
         data = request.POST
-        ctxid = data['ctxid']
         fld = Fields.objects.get(id=fldid)
         fld.name = data['name']
         fld.term_id = data['term_id']
@@ -93,7 +92,7 @@ def add(request):
             return redirect('/fields/view/' + str(fld.id))
 
     trms = Terms.objects.all()
-    return render(request, "fields/add.html", {'trms': trms})
+    return render(request, "fields/add.html", {'trms': trms, 'act': 'Add'})
 
 
 @csrf_exempt
@@ -107,3 +106,18 @@ def read(request, fldid):
     output.update({"term_id": field.term_id})
     output.update({"container": json.loads(field.container)})
     return JsonResponse(output, safe=False, status=200)
+
+
+@csrf_exempt
+def join(request):
+    """ add a link between a context and a field"""
+    if request.method == "POST":
+        data = request.POST
+        link = ContextsFields(field_id=data['fldid'], context_id=data['ctxid'], updated=datetime.now())
+        link.save()
+        if link.id:
+            return JsonResponse("success", safe=False, status=200)
+        else:
+            return JsonResponse("error", safe=False, status=200)
+    else:
+        return redirect('/fields')

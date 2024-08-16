@@ -2,29 +2,41 @@
 {% block title %} Field View {% endblock %}
 {% block content %}
     <div class="row">
-        <div class="col-8 offset-1">
+        <div class="col-6 offset-1 ">
             <h3 class="float-start">Field {{ field.name }}</h3>
-            <a title="Edit" class="float-start mt-2 mx-1" href="/fields/edit/{{ field.id }}">Edit</a><br/><br/>
-            <ul>
-                <li>Category: {{ field.category }}</li>
-                <li>Term: <a href="/terms/view/{{ field.term.id }}">{{ field.term.title }}</a> ({{ field.term.definition }}}<br/>
-                    [From: {{ field.term.ont.name }}]
-                </li>
-                <li>Datatype: {{ field.datatype }}</li>
-                <li>@container: {{ field.container }}</li>
-                {% if field.comment %}
-                    <li>Comment: {{ field.comment }}</li>
-                {% endif %}
-            </ul>
+        </div>
+        <div class="col-1">
+            <a title="Edit" class="form-control btn btn-success" href="/fields/edit/{{ field.id }}">Edit</a>
+        </div>
+        <div class="col-1">
+            <a title="Delete" class="form-control btn btn-danger" href="/fields/delete/{{ field.id }}">Delete</a>
         </div>
         <div class="col-2">
-            <select id="ctxadd" name="ctxadd" class="form-control" aria-label="Add field to Context">
+            <select id="ctxfldadd" name="ctxfldadd" class="form-control" aria-label="Add field to context">
                 <option value="" selected>Add to Context...</option>
                 {% for c in allctxs %}
                     <option value="{{ c.id }}" {% if c.id in ctxlist %} disabled{% endif %}>{{ c.name }}</option>
                 {% endfor %}
             </select>
+            <input id="fldid" type="hidden" data-fldid="{{ field.id }}"/>
         </div>
+    </div>
+    <div class="row">
+        <div class="col-10 offset-1 ">
+            <ul>
+            <li>Category: {{ field.category }}</li>
+            <li>Term: <a href="/terms/view/{{ field.term.id }}">{{ field.term.title }}</a> ({{ field.term.definition }}}<br/>
+                [From: {{ field.term.ont.name }}]
+            </li>
+            <li>Datatype: {{ field.datatype }}</li>
+            <li>@container: {{ field.container }}</li>
+            {% if field.comment %}
+                <li>Comment: {{ field.comment }}</li>
+            {% endif %}
+            </ul>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-10 offset-1">
             <div class="card mt-2">
                 <div class="card-header pt-1 pb-1">
@@ -40,9 +52,16 @@
                     </div>
                 </div>
                 <div id="ctxs" class="card-body list-group list-group-flush panel-responsive-220 py-0 pr-0">
+                    <div class="row">
                     {% for ctx in ctxs %}
-                        <a class="list-group-item items py-1" href="/contexts/view/{{ ctx.id }}">{{ ctx.name }}</a>
+                        <div class="col-11">
+                            <a class="list-group-item items py-1" href="/contexts/view/{{ ctx.id }}">{{ ctx.name }}</a>
+                        </div>
+                        <div class="col-1">
+                            <button class="btn btn-sm btn-danger delctxfld flddel" data-ctxid="{{ ctx.id }}" title="Delete">DEL</button>
+                        </div>
                     {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>

@@ -40,7 +40,7 @@ def getctx(ctxid):
 
 def getflds():
     """get a list of fields for a context file"""
-    flds = Fields.objects.all()
+    flds = Fields.objects.all().order_by('name')
     return flds
 
 
