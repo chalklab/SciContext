@@ -1,12 +1,12 @@
-Django==5.2.1
+Django==5.2.4
 django-admin-logs==1.4.0
 django-cors-headers==4.7.0
 django-crispy-forms==2.4
-python-dotenv==1.1.0
+python-dotenv==1.1.1
 rdflib==7.1.4
 PyGithub==2.6.1
 PyLD==2.0.4
 PyMySQL==1.1.1
 pytz==2025.2
-requests==2.32.3
+requests==2.32.4
 werkzeug==3.1.3
