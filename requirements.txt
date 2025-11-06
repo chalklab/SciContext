@@ -1,9 +1,9 @@
-Django==5.2.7
+Django==5.2.8
 django-admin-logs==1.4.0
 django-cors-headers==4.9.0
 django-crispy-forms==2.4
-python-dotenv==1.1.1
-rdflib==7.2.1
+python-dotenv==1.2.1
+rdflib==7.4.0
 PyGithub==2.8.1
 PyLD==2.0.4
 PyMySQL==1.1.2
