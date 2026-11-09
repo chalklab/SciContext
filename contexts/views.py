@@ -56,10 +56,10 @@ def add(request):
         data = request.POST
         ctx = Contexts()
         ctx.name = data['name']
-        ctx.description = data['description']
-        ctx.filename = data['filename']
-        if data['prjid']:
-            ctx.project_id = data['prjid']
+        ctx.description = data['desc']
+        ctx.filename = data['file']
+        if data['prj']:
+            ctx.project_id = data['prj']
         else:
             ctx.project_id = None
         ctx.version = data['version']

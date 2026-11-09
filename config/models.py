@@ -82,8 +82,8 @@ class Onts(models.Model):
     name = models.CharField(max_length=64, null=True)
     ns = models.CharField(max_length=8)
     url = models.CharField(unique=True, max_length=256, blank=True, null=True)
-    description = models.CharField(max_length=512, blank=True, null=True)
     homepage = models.CharField(max_length=256, blank=True, null=True)
+    description = models.CharField(max_length=512, blank=True, null=True)
     servers = models.ManyToManyField(Servers)
     trmcnt = models.IntegerField(blank=True, null=True)
     lastconupd = models.DateTimeField(null=True)
@@ -121,7 +121,7 @@ class OntsServers(models.Model):
     class Meta:
         managed = False
         db_table = 'onts_servers'
-        app_label = 'onts_servers'
+        app_label = 'onts'
 
 
 class Terms(models.Model):
